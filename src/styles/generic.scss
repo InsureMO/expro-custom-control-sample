@@ -1,0 +1,9 @@
+:host{
+    --global-font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', Tahoma, Arial, Helvetica;
+    --global-font-color: var(--rb-primary2)
+}
+:host{
+    font-family: var(--global-font-family);
+    color: var(--global-font-color);
+    font-size: 0.9rem;  
+}

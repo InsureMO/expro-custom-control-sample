@@ -1,0 +1,90 @@
+
+<i>I was embedded 😉...</i>
+<section class="d-flex flex-column w-100 gap-4">
+    <div class="d-flex flex-column gap-2 w-100">
+        <label for="address">Enter your full address</label>
+        <input class="w-100"
+        pInputText id="address" 
+        type="text"
+        #addressControl
+        placeholder=""
+        />
+    </div>
+
+    <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="apt_number">Apartment, unit, suite, or floor </label>
+            <input
+            class="w-100"
+            pInputText id="apt_number" 
+            type="text"
+            [(ngModel)]="formObject['apt_number']"
+            placeholder="Apartment No"
+            [readOnly]="true"
+            />
+        </div>
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="street_address">Street Address</label>
+            <input [readOnly]="true"
+            class="w-100"
+            pInputText id="street_address" 
+            type="text"
+            [(ngModel)]="formObject['street_address']"
+            placeholder="Apartment No"
+            />
+        </div>
+
+    </div>
+
+        
+    <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="city">City</label>
+            <input [readOnly]="true"
+            class="w-100"
+            pInputText id="city" 
+            type="text"
+            [(ngModel)]="formObject['city']"
+            placeholder="City"
+            />
+        </div>
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="state">State</label>
+            <input
+            [readOnly]="true"
+            class="w-100"
+            pInputText id="state" 
+            type="text"
+            [(ngModel)]="formObject['state']"
+            placeholder="State"
+            />
+        </div>
+
+    </div>
+
+    <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="country">Country</label>
+            <input
+            [readOnly]="true"
+            class="w-100"
+            pInputText id="country" 
+            type="text"
+            [(ngModel)]="formObject['country']"
+            placeholder="Country"
+            />
+        </div>
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="post_code">Postal Code</label>
+            <input
+            [readOnly]="true"
+            class="w-100"
+            pInputText id="post_code" 
+            type="text"
+            [(ngModel)]="formObject['post_code']"
+            placeholder="Postal Code"
+            />
+        </div>
+
+    </div>
+</section>

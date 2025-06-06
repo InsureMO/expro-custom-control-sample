@@ -3,11 +3,12 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "expro-custom-components": {
+    "expro-custom-component": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "changeDetection": "OnPush"
         }
       },
       "root": "",
@@ -17,12 +18,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/expro-custom-components",
+            "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -42,15 +41,21 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "4MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "500kB",
+                  "maximumError": "4MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "environments/environment.development.ts",
+                  "with": "environments/environment.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
@@ -64,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "expro-custom-components:build:production"
+              "buildTarget": "expro-custom-component:build:production"
             },
             "development": {
-              "buildTarget": "expro-custom-components:build:development"
+              "buildTarget": "expro-custom-component:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,10 +83,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [

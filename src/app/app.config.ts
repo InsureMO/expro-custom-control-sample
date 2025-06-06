@@ -1,8 +1,23 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig,provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { providePrimeNG } from 'primeng/config';
+import { provideHttpClient, withJsonpSupport } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { PatchService } from './patch/patch.service';
+import { ThemeConfig } from '../theme/config';
 
-import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  
+  providers: [
+    provideExperimentalZonelessChangeDetection(),
+    provideAnimationsAsync(),
+    provideHttpClient(withJsonpSupport()),
+    PatchService, //ensure prime ng providers are imported after patch service
+    MessageService,
+    providePrimeNG({
+      theme: ThemeConfig
+    }      
+    ),
+  ]
 };
