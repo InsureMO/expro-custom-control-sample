@@ -1,9 +1,16 @@
-@if(apiLoaded | async){
-<app-address-form
-[transaction]="currentTransaction"
-[isReadonly]="isReadonly"
-></app-address-form>
+
+@if(appLoadError()){
+    <div class="d-flex flex-column">
+        <strong class="text-danger">{{appLoadError()?.title}}</strong>
+        <span>{{appLoadError()?.message}}</span>
+    </div>
+}@else {
+    @if(apiLoaded | async){
+        <app-address-form></app-address-form>
+    }
 }
+
+
 
 
 <!-- any overlays will use this div to append to ensure styles are applied inside 

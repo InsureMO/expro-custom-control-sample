@@ -1,23 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AppComponent } from "../app.component";
-
-
-
-//use this registry to allow complex interactions between different components
-class CoreComponentRegistry {
-    appComponent : AppComponent | undefined= undefined
-}
-
-export type ComponentInRegistry = 'App'
-export class ParentAppEventData{
-  Payload: ParentAppEventDataPayload = new ParentAppEventDataPayload()
-}
-export class ParentAppEventDataPayload{
-  Transaction: Record<string,any> = {}
-}
-
-@Injectable({providedIn: 'root'})
-export class CoreService{
+import { ComponentInRegistry, CoreComponentRegistry } from "../types/core";
+import { AppService } from "../types/service";
+import { ParentAppOutput } from "../types/output";
+@Injectable()
+export class CoreService implements AppService{
     appendTo: HTMLElement | null = null
     mapLoaded = false
     private componentRegistry : CoreComponentRegistry | undefined
@@ -43,7 +30,7 @@ getComponentFromRegistry(type:ComponentInRegistry) :AppComponent | undefined {
     return undefined
   }
 
-  emiParentAppData(data:ParentAppEventData){
+  emiParentAppData(data:ParentAppOutput){
     let appComponent = this.getComponentFromRegistry('App') as AppComponent
     if(!appComponent){
         throw "App component not found in registry."
@@ -52,6 +39,20 @@ getComponentFromRegistry(type:ComponentInRegistry) :AppComponent | undefined {
     appComponent.parentAppData.emit(data)
   }
 
+  checkScriptExists(jsFile:string){
+    //get all `<script>` elements in document head
+    let loadedScripts = document.querySelectorAll('script')
+    let exists = false
+    for(const script of loadedScripts){
+      let srcFrags = script.getAttribute('src')?.split("/") ?? []
+      let fileName = srcFrags[srcFrags?.length-1]
+      if(fileName===jsFile) {
+        exists = true
+        break;
+      }
+    }
+    return exists
+  }
 
 
 

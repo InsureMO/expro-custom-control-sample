@@ -1,0 +1,90 @@
+/** 
+ * Default ExPro Color Pallete 
+  */
+:host{
+    /* neutral colors */    
+    --rb-neutral-100: #ffffff;
+    --rb-neutral-200: #F8F8FA;
+    --rb-neutral-300: #E9EBF0;
+    --rb-neutral-400: #E7E7E7;
+    --rb-neutral-500: #DBDEE6;
+    --rb-neutral-600: #CBD6E2;
+    --rb-neutral-700: #B3BACB;
+    --rb-neutral-800: #677799;
+    
+    /* error colors */    
+    --rb-error-100: #FEF2F2;
+    --rb-error-200: #FCD6D8;
+    --rb-error-300: #F46F75;
+    --rb-error-400: #F2545B;
+    --rb-error-500: #CB464C;
+    
+    /* primary colors */    
+    --rb-primary1-100: #F1F1FD;
+    --rb-primary1-200: #EAEAFD;
+    --rb-primary1-300: #C9CAFA;
+    --rb-primary1-400: #777AF2;
+    --rb-primary1-500: #6366CB;
+
+    --rb-primary2: #445781;
+    --rb-primary3: #39364E;
+    
+    /* secondary colors */    
+    --rb-secondary1: #333333;
+    --rb-secondary2: #F58220;
+
+    /* info colors */    
+
+    
+    --rb-info-100: #75B9F0;
+    --rb-info-200: #31708F;
+    --rb-info-300: #425B76;
+    --rb-info-400: #295D78;
+    
+    /* warning colors */    
+    --rb-warning-100: #FFFAEB;
+    --rb-warning-200: #FFEEC2;
+    --rb-warning-300: #F7B334;
+    --rb-warning-400: #FFB900;
+    --rb-warning-500: #D69B00;
+    
+    /* success colors */    
+    --rb-success-100: #EBFAF8;
+    --rb-success-200: #C2EFEA;
+    --rb-success-300: #00BDA5;
+    --rb-success-400: #009E8A;
+    
+    /* other colors */    
+    --rb-white: white;
+    --rb-black: black;
+    
+    /* rule colors */
+    --rb-rule-info-100: #d4ecd5;
+    --rb-rule-info-200: #b2ddb4;
+    --rb-rule-info-800: #2a602c;
+    --rb-rule-validation-100: #fef0cd;
+    --rb-rule-validation-200: #fde4a5;
+    --rb-rule-validation-800: #8a6a19;
+    --rb-rule-decline-100: #ffd1ce;
+    --rb-rule-decline-200: #ffada7;
+    --rb-rule-decline-800: #8c231c;
+    --rb-rule-referral-req-100: #fac9da;
+    --rb-rule-referral-req-200: #f69ebc;
+    --rb-rule-referral-req-800: #801136;
+    --rb-rule-referral-app-100: #c2e6e2;
+    --rb-rule-referral-app-200: #91d2cc;
+    --rb-rule-referral-app-800: #00534b;
+    --rb-rule-referral-dec-100: #ffd1ce;
+    --rb-rule-referral-dec-200: #ffada7;
+    --rb-rule-referral-dec-800: #8c231c;
+    --rb-rule-referral-mor-100: #fde0c2;
+    --rb-rule-referral-mor-200: #fbc791;
+    --rb-rule-referral-mor-800: #874400;
+
+    
+
+    /* app fonts */    
+    --global-font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', Tahoma, Arial, Helvetica;
+    --global-font-color: var(--rb-primary2)
+}
+

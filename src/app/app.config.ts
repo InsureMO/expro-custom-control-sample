@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideAnimationsAsync(),
-    provideHttpClient(withJsonpSupport()),
+    provideHttpClient(withJsonpSupport()), //withJsonpSupport for google maps js
     PatchService, //ensure prime ng providers are imported after patch service
     MessageService,
     providePrimeNG({

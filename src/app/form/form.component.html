@@ -4,6 +4,7 @@
     <div class="d-flex flex-column gap-2 w-100">
         <label for="address">Enter your full address</label>
         <input class="w-100"
+        [readOnly]="!sessionService.canEditForm()"
         pInputText id="address" 
         type="text"
         #addressControl
@@ -18,7 +19,7 @@
             class="w-100"
             pInputText id="apt_number" 
             type="text"
-            [(ngModel)]="formObject['apt_number']"
+            [(ngModel)]="formObject['PolicyHolderAddressUnitOrApartmentNumber']"
             placeholder="Apartment No"
             [readOnly]="true"
             />
@@ -29,7 +30,7 @@
             class="w-100"
             pInputText id="street_address" 
             type="text"
-            [(ngModel)]="formObject['street_address']"
+            [(ngModel)]="formObject['PolicyHolderAddressStreetName']"
             placeholder="Apartment No"
             />
         </div>
@@ -44,7 +45,7 @@
             class="w-100"
             pInputText id="city" 
             type="text"
-            [(ngModel)]="formObject['city']"
+            [(ngModel)]="formObject['PolicyHolderAddresscity']"
             placeholder="City"
             />
         </div>
@@ -55,7 +56,7 @@
             class="w-100"
             pInputText id="state" 
             type="text"
-            [(ngModel)]="formObject['state']"
+            [(ngModel)]="formObject['PolicyHolderAddressstate']"
             placeholder="State"
             />
         </div>
@@ -70,7 +71,7 @@
             class="w-100"
             pInputText id="country" 
             type="text"
-            [(ngModel)]="formObject['country']"
+            [(ngModel)]="formObject['PolicyHolderAddresscountry']"
             placeholder="Country"
             />
         </div>
@@ -81,7 +82,7 @@
             class="w-100"
             pInputText id="post_code" 
             type="text"
-            [(ngModel)]="formObject['post_code']"
+            [(ngModel)]="formObject['PolicyHolderAddresspostcode']"
             placeholder="Postal Code"
             />
         </div>

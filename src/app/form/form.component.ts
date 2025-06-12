@@ -1,9 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, input, Input, OnInit, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, input, Input, OnInit, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { GetShadowRootElementByID } from '../shared/utils/dom';
-import { CoreService, ParentAppEventData } from '../services/core.service';
+import { CoreService } from '../services/core.service';
+import { SessionService } from '../services/session.service';
+import { ParentAppOutput } from '../types/output';
 
 
 @Component({
@@ -13,31 +14,24 @@ import { CoreService, ParentAppEventData } from '../services/core.service';
   styleUrl: './form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressFormComponent {
-  isReadonly = input.required<boolean>()
-  
-  @Input() set transaction(txn:Record<string,any>){
-    this.currentTransaction = txn
-    this.formObject = txn['MasterCOVIDGLOBaseLayer'][0]['PolicyHolderAddress'] ?? {}
-  }
-  
+export class AddressFormComponent implements OnInit {
+
   @ViewChild('addressControl') addressControl!: ElementRef;
 
-  
   cd = inject(ChangeDetectorRef)
   coreService = inject(CoreService)
+  sessionService = inject(SessionService)
 
-  currentTransaction : Record<string,any> = {}
   formObject : Record<string,any> = {}
-
   fullAddress : string = ""
 
   ngOnInit(): void {
+    this.formObject = this.sessionService.currentObject() ?? {}
   }
   
   //address auto complete helper
   ngAfterViewInit() {
-    this.addressControl.nativeElement.value = this.currentTransaction['address'] ?? ''
+    this.addressControl.nativeElement.value = this.formObject['address'] ?? ''
     this.getPlaceAutocomplete();
   }
 
@@ -110,8 +104,10 @@ private populateAddressData(placeResult: google.maps.places.PlaceResult,addressO
 
   this.fullAddress = placeResult.formatted_address ?? ""
   console.log('Form Object',addressObject);
-  let eventData : ParentAppEventData = new ParentAppEventData()
-  eventData.Payload.Transaction = this.currentTransaction
+  let eventData : ParentAppOutput = new ParentAppOutput()
+  
+  //only send updated object in the current path
+  eventData.Payload.TargetObject = this.formObject
   this.coreService.emiParentAppData(eventData)
 }
 

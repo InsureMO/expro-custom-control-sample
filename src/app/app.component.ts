@@ -8,7 +8,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { Observable, catchError, map, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { AppConfig } from './types/config';
+import { SafeJsonParse } from './shared/utils/json';
+import { SessionService } from './services/session.service';
+import { AppLoadError } from './types/app';
 
 @Component({
   selector: 'expro-custom-address',
@@ -24,81 +26,95 @@ import { AppConfig } from './types/config';
     '../../src/styles.scss',
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [CoreService,SessionService]
 })
 
 
 export class AppComponent implements OnInit,OnDestroy{
   
-  @Input() set transaction(data:string){
-    if(data) {
-      try{
-        this.currentTransaction = JSON.parse(data)
-        console.log("Current Injected Txn",this.currentTransaction);
-        // this.handleTxnInjection()
-      }catch(e){
-        let msg = `<strong class="text-danger">Invalid transaction JSON injected. Please check.
-        Error Caught: ${(e as Error).message}</strong>`
-        this.appLoadError.set(msg)
-      }
-     }
-  }
-  @Input() set readonly(boolean:string){
-    this.isReadonly = boolean==="true"
+  //readonly transaction data passed from parent app
+  //custom app ctx attribute (HTML attribute will be: default-context)
+  @Input() set defaultContext(data:string){
+    let [parsedData,errorMsg] = SafeJsonParse(data)
+    if(!errorMsg.length){
+        this.sessionService.setDefaultContext(parsedData)
+        console.log("Default Context From Parent App",parsedData);
+    }else{
+        this.appLoadError.set(new AppLoadError("Invalid default context JSON injected",`Error Caught: ${errorMsg}`))
+    }
   }
 
-  @Input() set appConfig(conf:string){
-    this.config = JSON.parse(conf)
+  //custom app ctx attribute (HTML attribute will be: custom-context)
+  //use this for any custom data you need for this control
+  @Input() set customContext(ctx:string){
+    let [parsedCtx,errorMsg] = SafeJsonParse(ctx)
+    if(!errorMsg.length){
+        this.sessionService.setCustomContext(parsedCtx)
+        console.log("Custom App Context",parsedCtx);
+    }else{
+        this.appLoadError.set(new AppLoadError("Invalid custom context injected",`Error Caught: ${errorMsg}`))
+    }
   }
 
+  //expro app output event for updated form object
   @Output() parentAppData: EventEmitter<any> = new EventEmitter();
 
    
+  httpClient: HttpClient = inject(HttpClient)
   coreService = inject(CoreService);
   patchService = inject(PatchService);
-  
-  currentTransaction : Record<string,any> = {}
-  isReadonly: boolean = false
-  config: AppConfig | undefined 
+  sessionService = inject(SessionService);
 
-  appLoadError : WritableSignal<string | undefined> = signal(undefined)
+  appLoadError : WritableSignal<AppLoadError | undefined> = signal(undefined)
 
   APPEND_TO_ELEM_ID = 'shadow-append-to';
+  apiLoaded! : Observable<boolean> 
 
-  apiLoaded : Observable<boolean> 
+  constructor() {
+      this.coreService.registerComponent(this, 'App');
+      this.safeLoadMaps()
+    }
 
-  constructor(httpClient: HttpClient) {
-    this.coreService.registerComponent(this, 'App');
-    
-    if(!this.coreService.mapLoaded){
+  ngOnInit(): void {
+    console.log('ExPro custom address control has been initialized.');  
+  }
+
+
+  safeLoadMaps(){
+    if(this.coreService.mapLoaded){
+      return of(true)
+    }
+   
+    //check if script already loaded in previous app injection
+    if(this.coreService.checkScriptExists("places_impl.js")){
+      this.coreService.mapLoaded = true
+      return of(true)
+    }
+
+    try{
       const mapUrl = new URL(environment.googlemaps.bundle)
       mapUrl.searchParams.append("key",environment.googlemaps.token)
       mapUrl.searchParams.append("libraries","places")
 
-
-      this.apiLoaded = httpClient.jsonp(mapUrl.toString(), 'callback')
+      this.apiLoaded = this.httpClient.jsonp(mapUrl.toString(), 'callback')
       .pipe(
         map(() => {
           this.coreService.mapLoaded = true
           return true
-    }),
+        }),
         catchError((error:any) => {
           this.coreService.mapLoaded = false
           console.log('error loading maps',error);
           return of(false)
         }),
-      );
-    }else{
-      this.apiLoaded = of(true)
+      )
     }
-
+    catch(e){
+      return of(false)
+    }
+    return of(false)
   }
 
-  initAlready = false
-  ngOnInit(): void {
-    this.initAlready = true
-    console.log('ExPro Custom Address Root Component Init');
-  
-  }
 
   registerFont(){
     let style = document.createElement('style')
@@ -124,6 +140,7 @@ export class AppComponent implements OnInit,OnDestroy{
     console.log('ExPro Custom Address Root Component Destroyed');
     this.coreService.reset();
     this.patchService.reset();
+    this.sessionService.reset()
   }
 
 
