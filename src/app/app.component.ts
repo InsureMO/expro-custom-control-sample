@@ -82,13 +82,15 @@ export class AppComponent implements OnInit,OnDestroy{
 
   safeLoadMaps(){
     if(this.coreService.mapLoaded){
-      return of(true)
+       this.apiLoaded  = of(true)
+       return
     }
    
     //check if script already loaded in previous app injection
     if(this.coreService.checkScriptExists("places_impl.js")){
       this.coreService.mapLoaded = true
-      return of(true)
+      this.apiLoaded  = of(true)
+      return 
     }
 
     try{
@@ -110,9 +112,10 @@ export class AppComponent implements OnInit,OnDestroy{
       )
     }
     catch(e){
-      return of(false)
+      this.apiLoaded = of(false)
+      return
     }
-    return of(false)
+    return 
   }
 
 
