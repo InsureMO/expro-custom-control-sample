@@ -24,6 +24,9 @@ export class AddressFormComponent implements OnInit {
 
   fullAddress : string = ""
 
+  AUTO_COMPLETE_STYLE_ID = 'expro-address-google-autocomplete'
+  AUTO_COMPLETE_Z_INDEX = '999999'
+
   ngOnInit(): void {
   }
   
@@ -38,13 +41,30 @@ export class AddressFormComponent implements OnInit {
     if(!google) return
     if(this.addressControl){
       const itemAutoComplete = new google.maps.places.Autocomplete(this.addressControl.nativeElement)
+      this.patchAutoCompleteZindex()
       google.maps.event.addListener(itemAutoComplete, 'place_changed', () => {
+        
         const itemPlace = itemAutoComplete.getPlace();
         this.populateAddressData(itemPlace,this.sessionService.currentObject() ?? {})
         this.cd.markForCheck()
       })
     }
 }
+
+private patchAutoCompleteZindex(){
+  let found = document.head.querySelector(this.AUTO_COMPLETE_STYLE_ID)
+  if(found) return
+
+  // override pac-container z-index for google autocomplete globally
+  const style = document.createElement('style');
+  style.id = this.AUTO_COMPLETE_STYLE_ID
+  style.textContent = `
+    .pac-container {
+      z-index: ${this.AUTO_COMPLETE_Z_INDEX} !important;
+    }
+      `
+      document.head.appendChild(style);
+  }
 
 private populateAddressData(placeResult: google.maps.places.PlaceResult,addressObject:Record<string,any>){
   if(!placeResult.address_components || !addressObject) return
