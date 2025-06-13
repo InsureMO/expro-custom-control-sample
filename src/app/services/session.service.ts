@@ -8,26 +8,28 @@ export class SessionService implements AppService{
 
     //default app context data
     currentTransaction : WritableSignal<Record<string,any> | undefined> = signal(undefined)
-    currentObject : WritableSignal<Record<string,any> | undefined> = signal(undefined)
-    canEditForm : WritableSignal<boolean> = signal(false)
+    currentObject : WritableSignal<Record<string,any>> = signal({})
+    canEditForm : WritableSignal<boolean> = signal(true)
 
     //your custom app context data
     customAppContext: WritableSignal<CustomAppContext | undefined> = signal(undefined)
 
     reset(){
         this.currentTransaction.set(undefined)
-        this.currentObject.set(undefined)
-        this.canEditForm.set(false)
+        this.currentObject.set({})
+        this.canEditForm.set(true)
         this.customAppContext.set(undefined)
     }
 
     setDefaultContext(data:DefaultAppContext){
+        console.log('%c Custom Control Default Context Received! ', 'background: #F46F75; color: #FFFFFF',data)
         if(data.Payload?.Transaction) this.currentTransaction.set(data.Payload.Transaction)
         if(data.Payload?.SourceObject) this.currentObject.set(data.Payload.SourceObject)
         if(data.Payload?.CanEditForm !== undefined) this.canEditForm.set(data.Payload.CanEditForm)
     }
 
     setCustomContext(data:CustomAppContext){
+        console.log('%c Custom Control Custom Context Received! ', 'background: #F46F75; color: #FFFFFF',data)
         this.customAppContext.set(data)
     }
 }

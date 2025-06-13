@@ -35,7 +35,7 @@ getComponentFromRegistry(type:ComponentInRegistry) :AppComponent | undefined {
     if(!appComponent){
         throw "App component not found in registry."
     }
-    console.info("Sending Event From Core: ",data)
+    console.log('%c Custom Control Core Event', 'background: #F46F75; color: #FFFFFF',data)
     appComponent.parentAppData.emit(data)
   }
 

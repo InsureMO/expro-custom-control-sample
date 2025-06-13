@@ -11,6 +11,7 @@ import { AsyncPipe } from '@angular/common';
 import { SafeJsonParse } from './shared/utils/json';
 import { SessionService } from './services/session.service';
 import { AppLoadError } from './types/app';
+import { DefaultAppContext } from './types/input';
 
 @Component({
   selector: 'expro-custom-address',
@@ -34,14 +35,15 @@ export class AppComponent implements OnInit,OnDestroy{
   
   //readonly transaction data passed from parent app
   //custom app ctx attribute (HTML attribute will be: default-context)
-  @Input() set defaultContext(data:string){
-    let [parsedData,errorMsg] = SafeJsonParse(data)
-    if(!errorMsg.length){
-        this.sessionService.setDefaultContext(parsedData)
-        console.log("Default Context From Parent App",parsedData);
-    }else{
-        this.appLoadError.set(new AppLoadError("Invalid default context JSON injected",`Error Caught: ${errorMsg}`))
+  //first invocation of the app will be stringified data, but subsequent updates might be an object
+  @Input() set defaultContext(data:DefaultAppContext){
+    if(typeof data ==='string'){
+      let [parsedCtx,errorMsg] = SafeJsonParse(data)
+      if(!errorMsg.length) data = parsedCtx
+      else this.appLoadError.set(new AppLoadError("Invalid custom context injected",`Error Caught: ${errorMsg}`))
     }
+
+    this.sessionService.setDefaultContext(data)
   }
 
   //custom app ctx attribute (HTML attribute will be: custom-context)
@@ -50,7 +52,6 @@ export class AppComponent implements OnInit,OnDestroy{
     let [parsedCtx,errorMsg] = SafeJsonParse(ctx)
     if(!errorMsg.length){
         this.sessionService.setCustomContext(parsedCtx)
-        console.log("Custom App Context",parsedCtx);
     }else{
         this.appLoadError.set(new AppLoadError("Invalid custom context injected",`Error Caught: ${errorMsg}`))
     }
@@ -72,11 +73,11 @@ export class AppComponent implements OnInit,OnDestroy{
 
   constructor() {
       this.coreService.registerComponent(this, 'App');
-      this.safeLoadMaps()
     }
 
   ngOnInit(): void {
     console.log('ExPro custom address control has been initialized.');  
+    this.safeLoadMaps()
   }
 
 
@@ -95,7 +96,9 @@ export class AppComponent implements OnInit,OnDestroy{
 
     try{
       const mapUrl = new URL(environment.googlemaps.bundle)
-      mapUrl.searchParams.append("key",environment.googlemaps.token)
+      if(environment.googlemaps.token.length) mapUrl.searchParams.append("key",environment.googlemaps.token)
+      else mapUrl.searchParams.append("key",this.sessionService.customAppContext()?.MapsToken ?? '')
+
       mapUrl.searchParams.append("libraries","places")
 
       this.apiLoaded = this.httpClient.jsonp(mapUrl.toString(), 'callback')

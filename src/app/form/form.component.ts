@@ -22,16 +22,15 @@ export class AddressFormComponent implements OnInit {
   coreService = inject(CoreService)
   sessionService = inject(SessionService)
 
-  formObject : Record<string,any> = {}
   fullAddress : string = ""
 
   ngOnInit(): void {
-    this.formObject = this.sessionService.currentObject() ?? {}
   }
   
   //address auto complete helper
   ngAfterViewInit() {
-    this.addressControl.nativeElement.value = this.formObject['address'] ?? ''
+    let formObj = this.sessionService.currentObject()
+    this.addressControl.nativeElement.value = formObj && formObj['PolicyHolderAddress'] ? formObj['PolicyHolderAddress'] : ""
     this.getPlaceAutocomplete();
   }
 
@@ -41,7 +40,7 @@ export class AddressFormComponent implements OnInit {
       const itemAutoComplete = new google.maps.places.Autocomplete(this.addressControl.nativeElement)
       google.maps.event.addListener(itemAutoComplete, 'place_changed', () => {
         const itemPlace = itemAutoComplete.getPlace();
-        this.populateAddressData(itemPlace,this.formObject)
+        this.populateAddressData(itemPlace,this.sessionService.currentObject() ?? {})
         this.cd.markForCheck()
       })
     }
@@ -105,9 +104,9 @@ private populateAddressData(placeResult: google.maps.places.PlaceResult,addressO
   this.fullAddress = placeResult.formatted_address ?? ""
   console.log('Form Object',addressObject);
   let eventData : ParentAppOutput = new ParentAppOutput()
-  
+  this.sessionService.currentObject.set(addressObject)
   //only send updated object in the current path
-  eventData.Payload.TargetObject = this.formObject
+  eventData.Payload.TargetObject = addressObject
   this.coreService.emiParentAppData(eventData)
 }
 

@@ -1,5 +1,4 @@
 
-<i>I was embedded 😉...</i>
 <section class="d-flex flex-column w-100 gap-4">
     <div class="d-flex flex-column gap-2 w-100">
         <label for="address">Enter your full address</label>
@@ -19,7 +18,7 @@
             class="w-100"
             pInputText id="apt_number" 
             type="text"
-            [(ngModel)]="formObject['PolicyHolderAddressUnitOrApartmentNumber']"
+            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddressUnitOrApartmentNumber']"
             placeholder="Apartment No"
             [readOnly]="true"
             />
@@ -30,7 +29,7 @@
             class="w-100"
             pInputText id="street_address" 
             type="text"
-            [(ngModel)]="formObject['PolicyHolderAddressStreetName']"
+            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddressStreetName']"
             placeholder="Apartment No"
             />
         </div>
@@ -45,7 +44,7 @@
             class="w-100"
             pInputText id="city" 
             type="text"
-            [(ngModel)]="formObject['PolicyHolderAddresscity']"
+            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddresscity']"
             placeholder="City"
             />
         </div>
@@ -56,7 +55,7 @@
             class="w-100"
             pInputText id="state" 
             type="text"
-            [(ngModel)]="formObject['PolicyHolderAddressstate']"
+            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddressstate']"
             placeholder="State"
             />
         </div>
@@ -71,7 +70,7 @@
             class="w-100"
             pInputText id="country" 
             type="text"
-            [(ngModel)]="formObject['PolicyHolderAddresscountry']"
+            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddresscountry']"
             placeholder="Country"
             />
         </div>
@@ -82,7 +81,7 @@
             class="w-100"
             pInputText id="post_code" 
             type="text"
-            [(ngModel)]="formObject['PolicyHolderAddresspostcode']"
+            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddresspostcode']"
             placeholder="Postal Code"
             />
         </div>

@@ -30,4 +30,5 @@ export type DefaultAppContextPayload = {
  * attributes you have defined in the product for this control.
   */
 export type CustomAppContext = {
+  MapsToken: string
 }
