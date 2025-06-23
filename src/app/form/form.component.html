@@ -43,7 +43,8 @@
     <div class="d-flex flex-row gap-4">
         <div class="d-flex flex-column gap-2 w-100">
             <label for="city">City</label>
-            <input [readOnly]="true"
+            <input 
+            [readOnly]="!sessionService.canEditForm()"
             class="w-100"
             pInputText id="city" 
             type="text"
