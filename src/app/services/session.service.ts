@@ -1,6 +1,7 @@
 import { Injectable, signal, WritableSignal } from "@angular/core"
 import { AppService } from "../types/service"
 import {CustomAppContext, DefaultAppContext} from "../types/input"
+import { SupportedFieldGroup } from "../form/form.mapper"
 
 
 @Injectable()
@@ -9,6 +10,8 @@ export class SessionService implements AppService{
     //default app context data
     currentTransaction : WritableSignal<Record<string,any> | undefined> = signal(undefined)
     currentObject : WritableSignal<Record<string,any>> = signal({})
+    currentObjectKey : WritableSignal<SupportedFieldGroup> = signal('PolicyHolderAddress')
+
     canEditForm : WritableSignal<boolean> = signal(true)
 
     //your custom app context data
@@ -17,6 +20,7 @@ export class SessionService implements AppService{
     reset(){
         this.currentTransaction.set(undefined)
         this.currentObject.set({})
+        this.currentObjectKey.set("PolicyHolderAddress")
         this.canEditForm.set(true)
         this.customAppContext.set(undefined)
     }
@@ -26,6 +30,7 @@ export class SessionService implements AppService{
         if(data.Payload?.Transaction) this.currentTransaction.set(data.Payload.Transaction)
         if(data.Payload?.SourceObject) this.currentObject.set(data.Payload.SourceObject)
         if(data.Payload?.CanEditForm !== undefined) this.canEditForm.set(data.Payload.CanEditForm)
+        if(data.Payload?.Key !== undefined) this.currentObjectKey.set(data.Payload.Key)
     }
 
     setCustomContext(data:CustomAppContext){

@@ -1,3 +1,5 @@
+import { SupportedFieldGroup } from "../form/form.mapper"
+
 /** 
  * Default context as input event data (default-context) from parent ExPro app \
  * This context can have more properties overtime based on user requests.
@@ -22,6 +24,10 @@ export type DefaultAppContextPayload = {
      * Once you're done updating source object, pass it as TargetObject in the output
     */
     CanEditForm: boolean
+    /** 
+     *  Key of the source address object/entity within the full policy object (eg: "PolicyHolderAddress")
+    */
+    Key: SupportedFieldGroup 
 }
 
 /** 

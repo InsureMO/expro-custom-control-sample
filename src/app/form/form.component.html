@@ -18,18 +18,21 @@
             class="w-100"
             pInputText id="apt_number" 
             type="text"
-            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddressUnitOrApartmentNumber']"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['apt_number']]"
+            (change)="syncFormData()"
             placeholder="Apartment No"
-            [readOnly]="true"
+            [readOnly]="!sessionService.canEditForm()"
             />
         </div>
         <div class="d-flex flex-column gap-2 w-100">
             <label for="street_address">Street Address</label>
-            <input [readOnly]="true"
+            <input 
+            [readOnly]="!sessionService.canEditForm()"
             class="w-100"
             pInputText id="street_address" 
             type="text"
-            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddressStreetName']"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['street_address']]"
+            (change)="syncFormData()"
             placeholder="Apartment No"
             />
         </div>
@@ -44,18 +47,20 @@
             class="w-100"
             pInputText id="city" 
             type="text"
-            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddresscity']"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['city']]"
+            (change)="syncFormData()"
             placeholder="City"
             />
         </div>
         <div class="d-flex flex-column gap-2 w-100">
             <label for="state">State</label>
             <input
-            [readOnly]="true"
+            [readOnly]="!sessionService.canEditForm()"
             class="w-100"
             pInputText id="state" 
             type="text"
-            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddressstate']"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['state']]"
+            (change)="syncFormData()"
             placeholder="State"
             />
         </div>
@@ -66,22 +71,24 @@
         <div class="d-flex flex-column gap-2 w-100">
             <label for="country">Country</label>
             <input
-            [readOnly]="true"
+            [readOnly]="!sessionService.canEditForm()"
             class="w-100"
             pInputText id="country" 
             type="text"
-            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddresscountry']"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['country']]"
+            (change)="syncFormData()"
             placeholder="Country"
             />
         </div>
         <div class="d-flex flex-column gap-2 w-100">
             <label for="post_code">Postal Code</label>
             <input
-            [readOnly]="true"
+            [readOnly]="!sessionService.canEditForm()"
             class="w-100"
             pInputText id="post_code" 
             type="text"
-            [(ngModel)]="sessionService.currentObject()['PolicyHolderAddresspostcode']"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['post_code']]"
+            (change)="syncFormData()"
             placeholder="Postal Code"
             />
         </div>

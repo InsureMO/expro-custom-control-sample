@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, input, Input, OnInit, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, input, Input, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { CoreService } from '../services/core.service';
 import { SessionService } from '../services/session.service';
 import { ParentAppOutput } from '../types/output';
+import { FORM_MAPPER, SupportedFieldGroup } from './form.mapper';
 
 
 @Component({
@@ -27,13 +28,17 @@ export class AddressFormComponent implements OnInit {
   AUTO_COMPLETE_STYLE_ID = 'expro-address-google-autocomplete'
   AUTO_COMPLETE_Z_INDEX = '999999'
 
+  MAPPINGS : WritableSignal<Record<string,string>> = signal({})
+
   ngOnInit(): void {
+    this.MAPPINGS.set(FORM_MAPPER[this.sessionService.currentObjectKey()])
   }
   
   //address auto complete helper
   ngAfterViewInit() {
     let formObj = this.sessionService.currentObject()
-    this.addressControl.nativeElement.value = formObj && formObj['PolicyHolderAddress'] ? formObj['PolicyHolderAddress'] : ""
+    this.addressControl.nativeElement.value = formObj && formObj[this.sessionService.currentObjectKey()] ? 
+    formObj[this.sessionService.currentObjectKey()] : ""
     this.getPlaceAutocomplete();
   }
 
@@ -114,22 +119,26 @@ private populateAddressData(placeResult: google.maps.places.PlaceResult,addressO
     }
   }
 
-  addressObject['PolicyHolderAddresspostcode'] = postcode ?? "" 
-  addressObject['PolicyHolderAddressUnitOrApartmentNumber'] = apt_number ?? "" 
-  addressObject['PolicyHolderAddressStreetName'] = street_address ?? "" 
-  addressObject['PolicyHolderAddresscountry'] = country ?? "" 
-  addressObject['PolicyHolderAddressstate'] = state ?? "" 
-  addressObject['PolicyHolderAddresscity'] = city ?? "" 
+  addressObject[this.MAPPINGS()['apt_number']] = apt_number ?? ""
+  addressObject[this.MAPPINGS()['street_address']] = street_address ?? ""
+  addressObject[this.MAPPINGS()['city']] = city ?? ""
+  addressObject[this.MAPPINGS()['state']] = state ?? ""
+  addressObject[this.MAPPINGS()['post_code']] = postcode ?? ""
+  addressObject[this.MAPPINGS()['country']] = country ?? ""
 
   this.fullAddress = placeResult.formatted_address ?? ""
-  console.log('Form Object',addressObject);
-  let eventData : ParentAppOutput = new ParentAppOutput()
   this.sessionService.currentObject.set(addressObject)
-  //only send updated object in the current path
-  eventData.Payload.TargetObject = addressObject
-  this.coreService.emiParentAppData(eventData)
+  
+  this.syncFormData()
 }
 
+ syncFormData(){
+    console.log('Form Object',this.sessionService.currentObject());
+    let eventData : ParentAppOutput = new ParentAppOutput()
+    //only send updated object in the current path
+    eventData.Payload.TargetObject = this.sessionService.currentObject()
+    this.coreService.emiParentAppData(eventData)
+ }
 
 }
 
