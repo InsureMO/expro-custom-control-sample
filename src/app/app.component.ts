@@ -87,9 +87,9 @@ export class AppComponent implements OnInit,OnDestroy{
     let ctx : CustomAppContext = {
       googlemaps:  environment.googlemaps,
       abn: environment.abn,
+      insuremo: environment.insuremo,
     }
     this.sessionService.setCustomContext(ctx)
-    this.sessionService.insuremoToken = environment.InsuremoToken
   }
 
   safeLoadMaps(){

@@ -28,10 +28,6 @@ export type DefaultAppContextPayload = {
      *  Key of the source address object/entity within the full policy object (eg: "PolicyHolderAddress")
     */
     Key: SupportedFieldGroup 
-    /** 
-     * Insuremo Bearer token 
-      */
-    InsuremoToken: string
 }
 
 /** 
@@ -48,5 +44,8 @@ export type CustomAppContext = {
     api_search_by_name: string ,
     api_search_by_num: string 
     auth_guid: string 
+  }
+  insuremo:{
+    access_token: string
   }
 }

@@ -19,7 +19,6 @@ export class SessionService implements AppService{
 
     //your custom app context data
     customAppContext: WritableSignal<CustomAppContext | undefined> = signal(undefined)
-    insuremoToken: string = ""
 
     reset(){
         this.currentTransaction.set(undefined)
@@ -35,7 +34,6 @@ export class SessionService implements AppService{
         if(data.Payload?.SourceObject) this.currentObject.set(data.Payload.SourceObject)
         if(data.Payload?.CanEditForm !== undefined) this.canEditForm.set(data.Payload.CanEditForm)
         if(data.Payload?.Key !== undefined) this.currentObjectKey.set(data.Payload.Key)
-        if(data.Payload?.InsuremoToken !== undefined) this.insuremoToken = data.Payload.InsuremoToken
     }
 
     setCustomContext(data:CustomAppContext){

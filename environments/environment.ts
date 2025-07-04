@@ -1,6 +1,8 @@
 export const environment = {
     production: true,
-    InsuremoToken: "", //passed in default context
+    insuremo: {
+      access_token: ""
+    },
     //everything below will be passed as custom attr - defined in product setup
      googlemaps:{
       bundle: "",

@@ -19,7 +19,8 @@ export class AbnService implements AppService{
 
     searchByName(req:SearchByNameRequest): Observable<SearchByNameResult[]>{
         let headers = new HttpHeaders()
-        headers = headers.append("Authorization",this.sessionService.insuremoToken)
+        headers = headers.append("Authorization",
+            this.sessionService.customAppContext()?.insuremo.access_token ?? '')
         headers = headers.append("AuthenticationGuid",
             this.sessionService.customAppContext()?.abn.auth_guid ?? '')
 
@@ -29,7 +30,8 @@ export class AbnService implements AppService{
 
     searchByNumber(req:SearchByNumRequest): Observable<SearchByNumResult[]>{
         let headers = new HttpHeaders()
-        headers = headers.append("Authorization",this.sessionService.insuremoToken)
+        headers = headers.append("Authorization",
+            this.sessionService.customAppContext()?.insuremo.access_token ?? '')
         headers = headers.append("AuthenticationGuid",
             this.sessionService.customAppContext()?.abn.auth_guid ?? '')
 
