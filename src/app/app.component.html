@@ -4,9 +4,13 @@
         <strong class="text-danger">{{appLoadError()?.title}}</strong>
         <span>{{appLoadError()?.message}}</span>
     </div>
-}@else {
+}
+@else if(sessionService.currentObjectKey()==='CompanyDetails'){
+    <app-abn></app-abn>
+}
+@else {
     @if(apiLoaded | async){
-        <app-address-form></app-address-form>
+        <app-address></app-address>            
     }
 }
 

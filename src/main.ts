@@ -5,7 +5,7 @@ import { isDevMode } from '@angular/core';
 import { createCustomElement} from '@angular/elements';
 
 
-const APP_COMPONENT_TAG = "expro-custom-address"
+const APP_COMPONENT_TAG = "expro-custom-control"
 
 if (isDevMode()) {
   bootstrapApplication(AppComponent, appConfig)

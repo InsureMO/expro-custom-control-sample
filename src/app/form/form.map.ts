@@ -5,8 +5,8 @@
   */
 
 //add any other supported field groups/policy object keys here
-export type SupportedFieldGroup = "PolicyHolderAddress" | "ParkingLocation"
-export const FORM_MAPPER : Record<SupportedFieldGroup,Record<string,string>> = {
+export type SupportedFieldGroup = "PolicyHolderAddress" | "ParkingLocation" | "CompanyDetails"
+export const FORM_MAP : Record<SupportedFieldGroup,Record<string,string>> = {
     PolicyHolderAddress: {
         apt_number: "PolicyHolderAddressUnitOrApartmentNumber",
         street_address: "PolicyHolderAddressStreetName",
@@ -22,5 +22,19 @@ export const FORM_MAPPER : Record<SupportedFieldGroup,Record<string,string>> = {
         post_code: "PostalCode",
         state: "State",
         country: "Country"
-    }
+    },
+    CompanyDetails: {
+        business_name: "BusinessName",
+        abn:"ABN",
+        operating_years:"OperatingYears",
+        //locatiion form mapping similar to above
+        business_address: "BusinessAddress",
+        street_address: "Street",
+        suburb: "Suburb",
+        city: "City",
+        post_code: "PostCode",
+        state: "State",
+        country: "Country"
+    },
+
 }

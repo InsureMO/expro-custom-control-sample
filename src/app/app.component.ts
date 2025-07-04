@@ -1,21 +1,23 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, inject, Input, isDevMode, OnDestroy, OnInit, Output, signal, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { GetShadowHost, GetShadowRoot } from './shared/utils/dom';
 import { CoreService } from './services/core.service';
 import { PatchService } from './patch/patch.service';
 import { InputTextModule } from 'primeng/inputtext';
-import { AddressFormComponent } from './form/form.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { Observable, catchError, map, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { SafeJsonParse } from './shared/utils/json';
-import { SessionService } from './services/session.service';
+import { REQUIRES_MAP_JS, SessionService } from './services/session.service';
 import { AppLoadError } from './types/app';
-import { DefaultAppContext } from './types/input';
+import { CustomAppContext, DefaultAppContext } from './types/input';
+import { AddressComponent } from './form/address/address.component';
+import { AbnComponent } from './form/abn/abn.component';
 
 @Component({
-  selector: 'expro-custom-address',
-  imports: [InputTextModule,AddressFormComponent,AsyncPipe],
+  selector: 'expro-custom-control',
+  imports: [InputTextModule,AddressComponent,AbnComponent,
+    AsyncPipe],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
@@ -78,10 +80,21 @@ export class AppComponent implements OnInit,OnDestroy{
   ngOnInit(): void {
     console.log('ExPro custom address control has been initialized.');  
     this.safeLoadMaps()
+    if(isDevMode()) this.attachDevContext()
   }
 
+  attachDevContext(){
+    let ctx : CustomAppContext = {
+      googlemaps:  environment.googlemaps,
+      abn: environment.abn,
+    }
+    this.sessionService.setCustomContext(ctx)
+    this.sessionService.insuremoToken = environment.InsuremoToken
+  }
 
   safeLoadMaps(){
+    if(!REQUIRES_MAP_JS.includes(this.sessionService.currentObjectKey())) return
+    
     if(this.coreService.mapLoaded){
        this.apiLoaded  = of(true)
        return
@@ -95,9 +108,8 @@ export class AppComponent implements OnInit,OnDestroy{
     }
 
     try{
-      const mapUrl = new URL(environment.googlemaps.bundle)
-      if(environment.googlemaps.token.length) mapUrl.searchParams.append("key",environment.googlemaps.token)
-      else mapUrl.searchParams.append("key",this.sessionService.customAppContext()?.MapsToken ?? '')
+      const mapUrl = new URL(this.sessionService.customAppContext()?.googlemaps?.bundle ?? "")
+      mapUrl.searchParams.append("key",this.sessionService.customAppContext()?.googlemaps.token ?? '')
 
       mapUrl.searchParams.append("libraries","places")
 

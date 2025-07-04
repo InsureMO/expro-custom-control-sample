@@ -1,0 +1,16 @@
+.text-ellipsis-by-width{
+  max-width: var(--max-width);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.text-ellipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100% 
+}
+
+.break-all{
+  word-break:  break-all
+}

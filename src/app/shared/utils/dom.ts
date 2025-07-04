@@ -1,7 +1,7 @@
 import { environment } from "../../../../environments/environment.development"
 
 export const PARENT_DOM_APP = 'expro-web' //main expro
-export const CURRENT_DOM_APP = 'expro-custom-address' //current address form app
+export const CURRENT_DOM_APP = 'expro-custom-control' //current address form app
 
 /** 
  * Returns the Host element of the Shadow Root

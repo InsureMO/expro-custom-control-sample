@@ -4,7 +4,7 @@ const process = require("process");
 
 // Array of input files. Can be dynamically generated at build time
 const entries = []
-const final_target = "dist/browser/expro_address_control.js"
+const final_target = "dist/browser/expro_custom_control.js"
 const tempFile = "dist/browser/temp.js"
 
 // Loop through all the files in the dist/brower dir to collect bundled files

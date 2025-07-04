@@ -1,4 +1,4 @@
-import { SupportedFieldGroup } from "../form/form.mapper"
+import { SupportedFieldGroup } from "../form/form.map"
 
 /** 
  * Default context as input event data (default-context) from parent ExPro app \
@@ -28,6 +28,10 @@ export type DefaultAppContextPayload = {
      *  Key of the source address object/entity within the full policy object (eg: "PolicyHolderAddress")
     */
     Key: SupportedFieldGroup 
+    /** 
+     * Insuremo Bearer token 
+      */
+    InsuremoToken: string
 }
 
 /** 
@@ -36,5 +40,13 @@ export type DefaultAppContextPayload = {
  * attributes you have defined in the product for this control.
   */
 export type CustomAppContext = {
-  MapsToken: string
+  googlemaps: {
+    token: string
+    bundle: string
+  }
+  abn:{
+    api_search_by_name: string ,
+    api_search_by_num: string 
+    auth_guid: string 
+  }
 }

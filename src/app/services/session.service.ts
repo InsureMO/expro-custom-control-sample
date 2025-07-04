@@ -1,21 +1,25 @@
 import { Injectable, signal, WritableSignal } from "@angular/core"
 import { AppService } from "../types/service"
 import {CustomAppContext, DefaultAppContext} from "../types/input"
-import { SupportedFieldGroup } from "../form/form.mapper"
+import { SupportedFieldGroup } from "../form/form.map"
 
-
+export const REQUIRES_MAP_JS : SupportedFieldGroup[] = [
+    'ParkingLocation',
+    'PolicyHolderAddress'
+]
 @Injectable()
 export class SessionService implements AppService{
 
     //default app context data
     currentTransaction : WritableSignal<Record<string,any> | undefined> = signal(undefined)
     currentObject : WritableSignal<Record<string,any>> = signal({})
-    currentObjectKey : WritableSignal<SupportedFieldGroup> = signal('PolicyHolderAddress')
+    currentObjectKey : WritableSignal<SupportedFieldGroup> = signal('CompanyDetails')
 
     canEditForm : WritableSignal<boolean> = signal(true)
 
     //your custom app context data
     customAppContext: WritableSignal<CustomAppContext | undefined> = signal(undefined)
+    insuremoToken: string = ""
 
     reset(){
         this.currentTransaction.set(undefined)
@@ -31,6 +35,7 @@ export class SessionService implements AppService{
         if(data.Payload?.SourceObject) this.currentObject.set(data.Payload.SourceObject)
         if(data.Payload?.CanEditForm !== undefined) this.canEditForm.set(data.Payload.CanEditForm)
         if(data.Payload?.Key !== undefined) this.currentObjectKey.set(data.Payload.Key)
+        if(data.Payload?.InsuremoToken !== undefined) this.insuremoToken = data.Payload.InsuremoToken
     }
 
     setCustomContext(data:CustomAppContext){

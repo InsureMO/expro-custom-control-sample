@@ -2,20 +2,20 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inje
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { CoreService } from '../services/core.service';
-import { SessionService } from '../services/session.service';
-import { ParentAppOutput } from '../types/output';
-import { FORM_MAPPER, SupportedFieldGroup } from './form.mapper';
+import { SessionService } from '../../services/session.service';
+import { CoreService } from '../../services/core.service';
+import { ParentAppOutput } from '../../types/output';
+import { FORM_MAP } from '../form.map';
 
 
 @Component({
-  selector: 'app-address-form',
+  selector: 'app-address',
   imports: [InputTextModule,MessageModule,FormsModule],
-  templateUrl: './form.component.html',
-  styleUrl: './form.component.scss',
+  templateUrl: './address.component.html',
+  styleUrl: './address.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressFormComponent implements OnInit {
+export class AddressComponent implements OnInit {
 
   @ViewChild('addressControl') addressControl!: ElementRef;
 
@@ -31,7 +31,7 @@ export class AddressFormComponent implements OnInit {
   MAPPINGS : WritableSignal<Record<string,string>> = signal({})
 
   ngOnInit(): void {
-    this.MAPPINGS.set(FORM_MAPPER[this.sessionService.currentObjectKey()])
+    this.MAPPINGS.set(FORM_MAP[this.sessionService.currentObjectKey()])
   }
   
   //address auto complete helper
