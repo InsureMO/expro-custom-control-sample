@@ -1,6 +1,5 @@
 
 <section class="d-flex flex-column w-100 gap-4">
-            <div #dropdownOverlay></div>
 
     <div class="d-flex flex-row gap-4">
         <div class="d-flex flex-column gap-2 w-100">
@@ -17,6 +16,7 @@
             (onShow)="autoFocusQuery()"
             optionLabel="name" 
             [placeholder]="searchingByType()==='name' ? 'Loading data...': 'Search for a business name'">
+            <div #dropdownOverlay></div>
 
                 <ng-template #filter>
                 <div>
