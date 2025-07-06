@@ -1,4 +1,4 @@
-# Expro Custom Components
+# Expro Custom Control
 
 ### UI Component Library: 
 * Prime Ng Documentation: https://primeng.org/ 
