@@ -22,7 +22,11 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 To start a local development server, run:
 
 ```bash
-ng serve
+pnpm local
+```
+or
+```bash
+pnpm start
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
@@ -46,10 +50,15 @@ ng generate --help
 To build the project run:
 
 ```bash
-ng build
+pnpm package
+```
+or
+```bash
+pnpm pkg
 ```
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Once build has completed, we run `postbuild.js` to compile all artifacts and lazy chunks to a single JS bundle using `esbuild`.
 
 ### Running unit tests
 

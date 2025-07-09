@@ -34,13 +34,29 @@
                 </ng-template>
                 <ng-template #selectedItem >
                     @if(selectedBusiness()){
-                        <div class="text-ellipsis-by-width" style="max-width:35rem" >{{ selectedBusiness()?.name }}</div>
+                        <div class="d-flex flex-row align-items-center" >
+                            <div class="col-8 text-wrap text-ellipsis-by-width" style="max-width:20rem">
+                                <span>{{ selectedBusiness()?.name }}</span>
+                            </div>
+                            
+                            <div class="col-4 d-flex justify-content-end gap-2">
+                            <span class="text-muted">(ABN {{selectedBusiness()?.abn}})</span>
+                            {{selectedBusiness()?.stateCode}}&nbsp;{{selectedBusiness()?.postCode}}
+                        </div>
+                    </div>
                     }
                 </ng-template>
 
                 <ng-template let-option #item>
-                    <div class="text-ellipsis-by-width" style="max-width:35rem">
-                        {{ option.name }}
+                    <div class="d-flex flex-row align-items-center w-100" >
+                        <div class="col-8 text-wrap">
+                            <span>{{ option.name }}</span>
+                            <span class="text-muted">&nbsp;&nbsp;(ABN {{option.abn}})</span>
+                        </div>
+                        
+                        <div class="col-4 d-flex justify-content-end">
+                            {{option.stateCode}}&nbsp;{{option.postCode}}
+                        </div>
                     </div>
                 </ng-template>
 
