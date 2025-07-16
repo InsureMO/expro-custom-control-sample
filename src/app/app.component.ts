@@ -79,8 +79,8 @@ export class AppComponent implements OnInit,OnDestroy{
 
   ngOnInit(): void {
     console.log('ExPro custom address control has been initialized.');  
-    this.safeLoadMaps()
     if(isDevMode()) this.attachDevContext()
+    this.safeLoadMaps()
   }
 
   attachDevContext(){
