@@ -12,6 +12,12 @@ export const environment = {
       api_search_by_name: "",
       api_search_by_num: "",
       auth_guid: "" 
+    },
+    places:{
+      api_search_places: "",
+      api_search_place_details: ""
     }
+
+
 }
 

@@ -1,0 +1,162 @@
+
+<section class="d-flex flex-column w-100 gap-4">
+
+    <div class="d-flex flex-column gap-2 w-100">
+        <label for="businessAddress">Enter Address</label>
+
+        <p-select 
+            [options]="PlacesResults()" 
+            [(ngModel)]="selectedPlacePrediction" 
+            (ngModelChange)="onPlaceSelect()"
+            [readonly]="!sessionService.canEditForm()"
+            [showClear]="true"
+            [overlayOptions]="{target:dropdownOverlay}"
+            [filter]="true"
+            (onShow)="autoFocusQuery()"
+            optionLabel="description" 
+            [placeholder]="searchingByType()==='name' ? 'Loading data...': 'Search for an address'">
+            <div #dropdownOverlay></div>
+
+                <ng-template #filter>
+                <div>
+                    <input 
+                    [id]="QUERY_BOX_ID"
+                    class="w-100"
+                    pInputText id="searchNameQuery" 
+                    type="text"
+                    [(ngModel)]="searchNameQuery"
+                    (ngModelChange)="onPlaceChange($event)"
+                    placeholder="Search query..."
+                    />
+                </div>
+            
+                </ng-template>
+                <ng-template #selectedItem >
+                    @if(selectedPlacePrediction()){
+                        <div class="d-flex flex-row align-items-center" >
+                            <div class="col-8 text-wrap text-ellipsis-by-width" style="max-width:20rem">
+                                <span>{{ selectedPlacePrediction()?.structured_formatting?.main_text }}</span>
+                            </div>
+                            
+                            <div class="col-4 d-flex justify-content-end gap-2">
+                            <span class="text-muted">Address: </span>
+                            &nbsp;{{selectedPlacePrediction()?.description}}
+                        </div>
+                    </div>
+                    }
+                </ng-template>
+
+                <ng-template let-option #item>
+                    <div class="d-flex flex-column w-100" >
+                        <div class="text-wrap">
+                            <span>{{ option.structured_formatting.main_text }}</span>
+                        </div>
+                        <div class="text-muted small">
+                            {{ option.structured_formatting.secondary_text }}
+                        </div>
+                    </div>
+                </ng-template>
+
+                <ng-template #footer>
+                    <div class="p-3 text-primary">
+                        @if(searchingByType()==='name'){
+                            <div class="d-flex flex-row align-items-center gap-2">
+                                <div class="spinner-border spinner-border-sm"></div>
+                                <span>Searching...</span>
+                            </div>
+                        }@else {
+                            <span>Total Results: {{PlacesResults().length}}</span>
+                        }
+
+                        @if(error().length){
+                            <div class="text-danger">{{error()}}</div>
+                        }
+                    </div>
+
+            
+                </ng-template>
+            </p-select>
+    </div>
+
+    <!-- <app-address></app-address> -->
+    <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="street_address">Street Address</label>
+            <input 
+            [readOnly]="!sessionService.canEditForm()"
+            class="w-100"
+            pInputText id="street_address" 
+            type="text"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['street_address']]"
+            (change)="syncFormData()"
+            placeholder="Street address"
+            />
+        </div>
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="suburb">Suburb</label>
+            <input
+            [readOnly]="!sessionService.canEditForm()"
+            class="w-100"
+            pInputText id="suburb" 
+            type="text"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['suburb']]"
+            (change)="syncFormData()"
+            placeholder="suburb"
+            />
+        </div>
+    </div>
+
+    <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="city">City</label>
+            <input 
+            [readOnly]="!sessionService.canEditForm()"
+            class="w-100"
+            pInputText id="city" 
+            type="text"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['city']]"
+            (change)="syncFormData()"
+            placeholder="city"
+            />
+        </div>
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="state">State</label>
+            <input
+            [readOnly]="!sessionService.canEditForm()"
+            class="w-100"
+            pInputText id="state" 
+            type="text"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['state']]"
+            (change)="syncFormData()"
+            placeholder="state"
+            />
+        </div>
+    </div>
+    <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="postcode">Post Code</label>
+            <input 
+            [readOnly]="!sessionService.canEditForm()"
+            class="w-100"
+            pInputText id="postcode" 
+            type="text"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['post_code']]"
+            (change)="syncFormData()"
+            placeholder="postcode"
+            />
+        </div>
+        <div class="d-flex flex-column gap-2 w-100">
+            <label for="country">Country</label>
+            <input
+            [readOnly]="!sessionService.canEditForm()"
+            class="w-100"
+            pInputText id="country" 
+            type="text"
+            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['country']]"
+            (change)="syncFormData()"
+            placeholder="country"
+            />
+        </div>
+    </div>
+   
+</section>

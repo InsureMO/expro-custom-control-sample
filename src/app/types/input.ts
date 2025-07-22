@@ -41,9 +41,13 @@ export type CustomAppContext = {
     bundle: string
   }
   abn:{
-    api_search_by_name: string ,
+    api_search_by_name: string 
     api_search_by_num: string 
     auth_guid: string 
+  }
+  places:{
+    api_search_places:string
+    api_search_place_details: string
   }
   insuremo:{
     access_token: string

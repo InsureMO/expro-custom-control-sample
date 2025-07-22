@@ -88,6 +88,7 @@ export class AppComponent implements OnInit,OnDestroy{
       googlemaps:  environment.googlemaps,
       abn: environment.abn,
       insuremo: environment.insuremo,
+      places: environment.places
     }
     this.sessionService.setCustomContext(ctx)
   }

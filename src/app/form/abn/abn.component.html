@@ -94,86 +94,8 @@
         </div>
     </div>
 
-    <!-- <app-address></app-address> -->
-    <div class="d-flex flex-row gap-4">
-        <div class="d-flex flex-column gap-2 w-100">
-            <label for="street">Street</label>
-            <input 
-            [readOnly]="!sessionService.canEditForm()"
-            class="w-100"
-            pInputText id="street" 
-            type="text"
-            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['street']]"
-            (change)="syncFormData()"
-            placeholder="street"
-            />
-        </div>
-        <div class="d-flex flex-column gap-2 w-100">
-            <label for="suburb">Suburb</label>
-            <input
-            [readOnly]="!sessionService.canEditForm()"
-            class="w-100"
-            pInputText id="suburb" 
-            type="text"
-            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['suburb']]"
-            (change)="syncFormData()"
-            placeholder="suburb"
-            />
-        </div>
-    </div>
-
-    <div class="d-flex flex-row gap-4">
-        <div class="d-flex flex-column gap-2 w-100">
-            <label for="city">City</label>
-            <input 
-            [readOnly]="!sessionService.canEditForm()"
-            class="w-100"
-            pInputText id="city" 
-            type="text"
-            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['city']]"
-            (change)="syncFormData()"
-            placeholder="city"
-            />
-        </div>
-        <div class="d-flex flex-column gap-2 w-100">
-            <label for="state">State</label>
-            <input
-            [readOnly]="!sessionService.canEditForm()"
-            class="w-100"
-            pInputText id="state" 
-            type="text"
-            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['state']]"
-            (change)="syncFormData()"
-            placeholder="state"
-            />
-        </div>
-    </div>
-    <div class="d-flex flex-row gap-4">
-        <div class="d-flex flex-column gap-2 w-100">
-            <label for="postcode">Post Code</label>
-            <input 
-            [readOnly]="!sessionService.canEditForm()"
-            class="w-100"
-            pInputText id="postcode" 
-            type="text"
-            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['post_code']]"
-            (change)="syncFormData()"
-            placeholder="postcode"
-            />
-        </div>
-        <div class="d-flex flex-column gap-2 w-100">
-            <label for="country">Country</label>
-            <input
-            [readOnly]="!sessionService.canEditForm()"
-            class="w-100"
-            pInputText id="country" 
-            type="text"
-            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['country']]"
-            (change)="syncFormData()"
-            placeholder="country"
-            />
-        </div>
-    </div>
+    <app-places></app-places>
+    
     <div class="d-flex flex-row gap-4">
         <div class="d-flex flex-column gap-2 w-100">
             <label for="operatingYears" class="d-flex align-items-center">

@@ -14,6 +14,7 @@ import { GetServerMsgFromHttpError } from '../../shared/utils/http';
 import {  debounceTime, Subject, distinctUntilChanged, switchMap, of, catchError } from 'rxjs';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { GetShadowRootElementByID } from '../../shared/utils/dom';
+import { PlacesComponent } from "../places/places.component";
 type SearchType = 'name' | 'number'
 type DebouncedSearch = {
   query: string
@@ -22,8 +23,8 @@ type DebouncedSearch = {
 
 @Component({
   selector: 'app-abn',  
-  imports: [FormsModule,InputTextModule,SelectModule,InputNumberModule,
-    MessageModule],
+  imports: [FormsModule, InputTextModule, SelectModule, InputNumberModule,
+    MessageModule, PlacesComponent],
   providers: [AbnService],
   templateUrl: './abn.component.html',
   styleUrl: './abn.component.scss',

@@ -13,7 +13,7 @@ export class SessionService implements AppService{
     //default app context data
     currentTransaction : WritableSignal<Record<string,any> | undefined> = signal(undefined)
     currentObject : WritableSignal<Record<string,any>> = signal({})
-    currentObjectKey : WritableSignal<SupportedFieldGroup> = signal('PolicyHolderAddress')
+    currentObjectKey : WritableSignal<SupportedFieldGroup> = signal('CompanyDetails')
 
     canEditForm : WritableSignal<boolean> = signal(true)
 
