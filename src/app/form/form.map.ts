@@ -5,7 +5,7 @@
   */
 
 //add any other supported field groups/policy object keys here
-export type SupportedFieldGroup = "PolicyHolderAddress" | "ParkingLocation" | "CompanyDetails" | "Vehicle"
+export type SupportedFieldGroup = "PolicyHolderAddress" | "ParkingLocation" | "CompanyDetails" | "VehicleInformation1"
 export const FORM_MAP : Record<SupportedFieldGroup,Record<string,string>> = {
     PolicyHolderAddress: {
         apt_number: "PolicyHolderAddressUnitOrApartmentNumber",
@@ -36,7 +36,7 @@ export const FORM_MAP : Record<SupportedFieldGroup,Record<string,string>> = {
         state: "State",
         country: "Country"
     },
-    Vehicle: {
+    VehicleInformation1: {
         is_new_not_registered: "NewVehicleNotYetRegistered",
         rego: "Rego",
         state: "WhichStateIsTheVehicleUsuallyL...",
