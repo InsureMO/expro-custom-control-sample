@@ -13,11 +13,12 @@ import { AppLoadError } from './types/app';
 import { CustomAppContext, DefaultAppContext } from './types/input';
 import { AddressComponent } from './form/address/address.component';
 import { AbnComponent } from './form/abn/abn.component';
+import { VehicleComponent } from "./form/Vehicle/vehicle.component";
 
 @Component({
   selector: 'expro-custom-control',
-  imports: [InputTextModule,AddressComponent,AbnComponent,
-    AsyncPipe],
+  imports: [InputTextModule, AddressComponent, AbnComponent,
+    AsyncPipe, VehicleComponent],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.ShadowDom,
@@ -88,7 +89,8 @@ export class AppComponent implements OnInit,OnDestroy{
       googlemaps:  environment.googlemaps,
       abn: environment.abn,
       insuremo: environment.insuremo,
-      places: environment.places
+      places: environment.places,
+      vehicle: environment.vehicle
     }
     this.sessionService.setCustomContext(ctx)
   }

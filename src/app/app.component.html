@@ -8,6 +8,9 @@
 @else if(sessionService.currentObjectKey()==='CompanyDetails'){
     <app-abn></app-abn>
 }
+@else if(sessionService.currentObjectKey()==='Vehicle'){
+    <app-vehicle></app-vehicle>
+}
 @else {
     @if(apiLoaded | async){
         <app-address></app-address>            

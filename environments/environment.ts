@@ -16,6 +16,14 @@ export const environment = {
     places:{
       api_search_places: "",
       api_search_place_details: ""
+    },
+    vehicle:{
+      api_vehicle_lookup_by_plate:"",
+      api_vehicle_lookup_by_nvic:"",
+      api_vehicle_year_range:"",
+      api_vehicle_make_models:"",
+      api_vehicle_make_variants:"",
+      api_vehicle_list_nvic:""
     }
 
 

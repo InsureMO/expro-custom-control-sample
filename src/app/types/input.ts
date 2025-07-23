@@ -52,4 +52,12 @@ export type CustomAppContext = {
   insuremo:{
     access_token: string
   }
+  vehicle:{
+    api_vehicle_lookup_by_plate:string
+    api_vehicle_lookup_by_nvic:string
+    api_vehicle_year_range:string
+    api_vehicle_make_models:string
+    api_vehicle_make_variants:string
+    api_vehicle_list_nvic:string
+  }
 }

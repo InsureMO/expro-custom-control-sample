@@ -1,0 +1,370 @@
+<section class="d-flex flex-column w-100 gap-4">
+    <!-- Primary Controls - Always Visible -->
+    <div class="card p-3">
+        <div class="d-flex flex-column gap-3">
+            <!-- Vehicle Type -->
+            <div class="d-flex flex-row gap-4">
+                <div class="d-flex flex-column gap-2 w-100">
+                    <label for="vehicleType">Vehicle Type</label>
+                    <p-select
+                        [disabled]="!sessionService.canEditForm()"
+                        class="w-100"
+                        id="vehicleType"
+                        [options]="vehicleTypeOptions"
+                        [(ngModel)]="sessionService.currentObject()[MAPPINGS()['type']]"
+                        (ngModelChange)="syncFormData()"
+                        placeholder="Select vehicle type"
+                        optionLabel="label"
+                        optionValue="value">
+                    </p-select>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row gap-4">
+
+                <div class="d-flex flex-column gap-2 w-100">
+                    <label for="state">Which state is the vehicle usually located?</label>
+                    <p-select
+                        [disabled]="!sessionService.canEditForm()"
+                        class="w-100"
+                        id="state"
+                        [options]="stateOptions"
+                        [(ngModel)]="sessionService.currentObject()[MAPPINGS()['state']]"
+                        (ngModelChange)="onRegoOrStateChange()"
+                        placeholder="Select state"
+                        optionLabel="label"
+                        optionValue="value">
+                    </p-select>
+                </div>
+    
+                <div class="d-flex flex-column gap-2 w-100">
+                    <label for="state">
+                        Which postcode is the vehicle usually located?</label>
+                    <p-select
+                        [disabled]="!sessionService.canEditForm()"
+                        class="w-100"
+                        id="state"
+                        [options]="postCodeOptions"
+                        [(ngModel)]="sessionService.currentObject()[MAPPINGS()['post_code']]"
+                        (ngModelChange)="syncFormData()"
+                        placeholder="Select PostCode"
+                        optionLabel="label"
+                        [virtualScroll]="true"
+                        [virtualScrollItemSize]="50"
+                        optionValue="value">
+                    </p-select>
+                </div>
+                </div>
+
+            <!-- New Vehicle Checkbox -->
+            <div class="form-check">
+                <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="newVehicle"
+                    [(ngModel)]="sessionService.currentObject()[MAPPINGS()['is_new_not_registered']]"
+                    (change)="clearVehicleFields();syncFormData()"
+                    [disabled]="!sessionService.canEditForm()">
+                <label class="form-check-label" for="newVehicle">
+                    New Vehicle (Not yet registered)
+                </label>
+            </div>
+
+            <!-- Rego and State -->
+            <div class="d-flex flex-row gap-4">
+                <div class="d-flex flex-column gap-2 w-100">
+                    <label for="rego">Registration Number</label>
+                    <input 
+                        [disabled]="!sessionService.canEditForm() || sessionService.currentObject()[MAPPINGS()['is_new_not_registered']]"
+                        class="w-100"
+                        pInputText id="rego" 
+                        type="text"
+                        [(ngModel)]="sessionService.currentObject()[MAPPINGS()['rego']]"
+                        (ngModelChange)="onRegoOrStateChange()"
+                        placeholder="Enter registration number"
+                    />
+                </div>
+           
+            </div>
+
+         
+        </div>
+    </div>
+
+    <!-- Status Messages -->
+    @if (isLookingUpVehicle() || error() || noVehicleFound()) {
+        <div class="card p-3">
+            @if (isLookingUpVehicle()) {
+                <div class="d-flex align-items-center gap-3">
+                    <p-progressSpinner [style]="{ width: '30px', height: '30px' }" strokeWidth="4"></p-progressSpinner>
+                    <span class="text-info">{{lookupMessage()}}</span>
+                </div>
+            } @else if (error()) {
+                <p-message severity="error" [text]="error()" styleClass="w-100"></p-message>
+            } @else if (noVehicleFound()) {
+                <p-message severity="warn" text="No vehicle details found. Please enter the information manually." styleClass="w-100"></p-message>
+            }
+        </div>
+    }
+
+    <!-- Vehicle Details Section -->
+    @if (showVehicleDetails()) {
+        <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Vehicle Details</h5>
+            </div>
+            
+            <!-- Unified Vehicle Details Display -->
+            <ng-container *ngTemplateOutlet="vehicleDetailsDisplay"></ng-container>
+        </div>
+    }
+</section>
+
+<!-- Vehicle Details Display Template -->
+<ng-template #vehicleDetailsDisplay>
+    <div class="d-flex flex-column gap-3">
+        <!-- Basic Information -->
+        <div class="row">
+            <div class="col-md-6">
+                <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                    label: 'Vehicle Year Manufactured', 
+                    fieldId: 'year',
+                    fieldType: 'year',
+                    mapping: 'year'
+                }"></ng-container>
+            </div>
+           
+        </div>
+    
+
+        <!-- Vehicle Selection Form -->
+        @if(isLoadingMakes() || isLoadingModels() ||isLoadingVariants() || isLoadingNvicOptions()){
+            <div class="d-flex align-items-center gap-2 p-2 border rounded">
+                <p-progressSpinner [style]="{ width: '20px', height: '20px' }" strokeWidth="4"></p-progressSpinner>
+                <span class="text-muted">🔎 Narrowing Down Your Vehicle...</span>
+            </div>
+        }
+        @else if ( !manualSearchVehicleFound() && (makeOptions().length || modelOptions().length || variantOptions().length || nvicOptions().length)) {
+            <div class="card p-3 bg-primary-subtle border-primary-subtle">
+                <!-- Welcome Header -->
+                <div class="text-center mb-4">
+                    <h4 class="text-primary mb-2">🎯 Great! Let's find your vehicle details!</h4>
+                    @if( sessionService.currentObject()[MAPPINGS()['is_new_not_registered']] && (makeOptions().length > 0 || modelOptions().length > 0 || variantOptions().length > 0 || nvicOptions().length > 0)){
+
+                    
+                    @if (makeOptions().length > 0) {
+                        <p class="text-muted mb-0">Please select the Make of your Vehicle from the options</p>
+                    }
+                    @if (modelOptions().length > 0) {
+                        <p class="text-muted mb-0">Please select the Model of your Vehicle from the options</p>
+                    }
+                    @if (variantOptions().length > 0) {
+                        <p class="text-muted mb-0">Please select the Variant of your Vehicle from the options</p>
+                    }
+                    @if (nvicOptions().length > 0) {
+                        <p class="text-muted mb-0">Please select the Select Specific Model of your Vehicle from the options</p>
+                    }
+                }
+
+                </div>
+
+                <!-- Form Fields -->
+                <div class="d-flex flex-column gap-3">
+                    <!-- Vehicle Make Selection -->
+                    @if (makeOptions().length > 0) {
+                        <div class="d-flex flex-column gap-2">
+                            <label for="makeSelect">Select Vehicle Make</label>
+                           
+                                <p-select
+                                    [disabled]="!sessionService.canEditForm()"
+                                    class="w-100"
+                                    id="makeSelect"
+                                    [options]="makeOptions()"
+                                    [(ngModel)]="selectedMake"
+                                    (ngModelChange)="onMakeSelect()"
+                                    placeholder="Select vehicle make"
+                                    optionLabel="name"
+                                    optionValue="name"
+                                    [filter]="true"
+                                    filterBy="name">
+                                </p-select>
+                        </div>
+                    }
+
+                    <!-- Vehicle Model Selection -->
+                    @if (modelOptions().length > 0) {
+                        <div class="d-flex flex-column gap-2">
+                            <label for="modelSelect">Select Vehicle Model</label>
+                          
+                                <p-select
+                                    [disabled]="!sessionService.canEditForm()"
+                                    class="w-100"
+                                    id="modelSelect"
+                                    [options]="modelOptions()"
+                                    [(ngModel)]="selectedModel"
+                                    (ngModelChange)="onModelSelect()"
+                                    placeholder="Select vehicle model"
+                                    optionLabel="name"
+                                    optionValue="name"
+                                    [filter]="true"
+                                    filterBy="name">
+                                </p-select>
+                        </div>
+                    }
+
+                    <!-- Vehicle Variant Selection -->
+                    @if (variantOptions().length > 0) {
+                        <div class="d-flex flex-column gap-2">
+                            <label for="variantSelect">Select Vehicle Variant</label>
+                                <p-select
+                                    [disabled]="!sessionService.canEditForm()"
+                                    class="w-100"
+                                    id="variantSelect"
+                                    [options]="variantOptions()"
+                                    [(ngModel)]="selectedVariant"
+                                    (ngModelChange)="onVariantSelect()"
+                                    placeholder="Select vehicle variant"
+                                    optionLabel="name"
+                                    optionValue="name"
+                                    [filter]="true"
+                                    filterBy="name">
+                                </p-select>
+                        </div>
+                    }
+
+                    <!-- NVIC Selection -->
+                    @if (nvicOptions().length > 0) {
+                        <div class="d-flex flex-column gap-2">
+                            <label for="nvicSelect">Select Specific Model</label>
+                        
+                                <p-select
+                                    [disabled]="!sessionService.canEditForm()"
+                                    class="w-100"
+                                    id="nvicSelect"
+                                    [options]="nvicOptions()"
+                                    [(ngModel)]="selectedNvic"
+                                    (ngModelChange)="onNvicSelect()"
+                                    placeholder="Select specific vehicle model"
+                                    optionLabel="modelName"
+                                    [filter]="true"
+                                    filterBy="modelName">
+                                </p-select>
+                            
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        
+        
+
+        <!-- Additional Details -->
+        <div class="row">
+            <div class="col-md-6">
+                <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                    label: 'Vehicle Make', 
+                    fieldId: 'make',
+                    fieldType: 'text',
+                    mapping: 'make'
+                }"></ng-container>
+            </div>
+            <div class="col-md-6">
+                <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                    label: 'Model', 
+                    fieldId: 'model',
+                    fieldType: 'text',
+                    mapping: 'model'
+                }"></ng-container>
+            </div>
+             </div>
+    
+            <div class="row">
+                <div class="col-md-6">
+                    <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                        label: 'Vehicle Variant', 
+                        fieldId: 'variant',
+                        fieldType: 'text',
+                        mapping: 'variant'
+                    }"></ng-container>
+                </div>
+                <div class="col-md-6">
+                    <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                        label: 'Engine Size', 
+                        fieldId: 'engineSize',
+                        fieldType: 'text',
+                        mapping: 'engine_size'
+                    }"></ng-container>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-md-6">
+                <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                    label: 'Vehicle Segment', 
+                    fieldId: 'segment',
+                    fieldType: 'text',
+                    mapping: 'segment'
+                }"></ng-container>
+            </div>
+            <div class="col-md-6">
+                <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
+                    label: 'Market Value (Sum Insured)', 
+                    fieldId: 'sumInsured',
+                    fieldType: 'text',
+                    mapping: 'sum_insured'
+                }"></ng-container>
+            </div>
+        </div>
+
+        <div class="row">
+        <div class="d-flex flex-column gap-2">
+
+            <label for="state">Is it an Electric Vehicle?</label>
+            <p-select
+                [disabled]="!sessionService.canEditForm()"
+                class="w-100"
+                id="state"
+                [options]="YESNOOptions"
+                [(ngModel)]="sessionService.currentObject()[MAPPINGS()['electric_vehicle']]"
+                (ngModelChange)="syncFormData()"
+                placeholder=""
+                optionLabel="label"
+                optionValue="value">
+            </p-select>
+        </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Generic Field Display Template -->
+<ng-template #fieldDisplay let-label="label" let-fieldId="fieldId" let-fieldType="fieldType" let-mapping="mapping">
+    <div class="d-flex flex-column gap-2">
+        <label [for]="fieldId">{{label}}</label>
+        
+        @switch (fieldType) {
+            @case ('year') {
+           
+                    <p-inputNumber 
+                        [id]="fieldId"
+                        [inputId]="fieldId"
+                        [showButtons]="true"
+                        [disabled]="!sessionService.canEditForm()"
+                        [(ngModel)]="sessionService.currentObject()[MAPPINGS()[mapping]]"
+                        (ngModelChange)="onYearChange()"
+                        placeholder="Enter year"
+                    > 
+                    </p-inputNumber>
+            }
+            @default {
+                <input
+                    [readOnly]=" !sessionService.canEditForm()"
+                    class="w-100"
+                    pInputText [id]="fieldId" 
+                    type="text"
+                    [(ngModel)]="sessionService.currentObject()[MAPPINGS()[mapping]]"
+                    (change)="syncFormData()"
+                    [placeholder]="'Enter ' + label.toLowerCase()"
+                />
+            }
+        }
+    </div>
+</ng-template>
