@@ -15,6 +15,9 @@ import { ButtonModule } from 'primeng/button';
 import { GetShadowRootElementByID } from '../../shared/utils/dom';
 import { VehicleService } from './vehicle.service';
 import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { CheckboxModule } from 'primeng/checkbox';
+
 
 import { 
   VehicleLookupByPlateRequest, VehicleLookupByPlateResponse, 
@@ -38,7 +41,7 @@ type VehicleLookupSearch = {
 @Component({
   selector: 'app-vehicle',  
   imports: [FormsModule,InputTextModule,SelectModule,InputNumberModule,
-    MessageModule,ProgressSpinnerModule, NgTemplateOutlet, ButtonModule],
+    MessageModule,ProgressSpinnerModule, NgTemplateOutlet, ButtonModule, DatePickerModule, CheckboxModule],
   providers: [VehicleService],
   templateUrl: './vehicle.component.html',
   styleUrl: './vehicle.component.scss',
@@ -92,7 +95,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
   
   // Flag to prevent cascading API calls when setting values programmatically
   isSettingValuesProgram: WritableSignal<boolean> = signal(false)
-  manualSearchVehicleFound: WritableSignal<boolean> = signal(false)
+  manualVehicleEntry: WritableSignal<boolean> = signal(false)
   manualSearching: WritableSignal<boolean> = signal(false)
 
 
@@ -10784,7 +10787,10 @@ export class VehicleComponent implements OnInit,OnDestroy{
         return this.vehicleService.vehicleLookupByPlate(request).pipe(
           catchError((error: HttpErrorResponse) => {
             this.isLookingUpVehicle.set(false);
-            this.error.set(GetServerMsgFromHttpError(error));
+            console.log(error)
+            this.error.set("Unfortunately we could find the details of your vehicle. Please enter them manually.");
+            this.manualVehicleEntry.set(true)
+
             return of(null);
           })
         );
@@ -10793,11 +10799,14 @@ export class VehicleComponent implements OnInit,OnDestroy{
       next: (result: VehicleLookupByPlateResponse | null) => {
         if (result && result.result && result.result.length > 0) {
           this.handleVehicleLookupByRegoResult(result.result[0]);
+          this.manualVehicleEntry.set(true)
         } else {
           this.isLookingUpVehicle.set(false);
           this.noVehicleFound.set(true);
           // Clear auto-populated fields to allow manual entry
           this.clearVehicleFields();
+          this.manualVehicleEntry.set(true)
+
         }
       }
     });
@@ -10824,7 +10833,10 @@ export class VehicleComponent implements OnInit,OnDestroy{
       this.vehicleService.vehicleLookupByNVIC(nvicRequest).pipe(
         catchError((error: HttpErrorResponse) => {
           this.isLookingUpVehicle.set(false);
-          this.error.set(GetServerMsgFromHttpError(error));
+          console.log(error);
+          this.error.set("Unfortunately we could find the details of your vehicle. Please enter them manually.");
+          this.manualVehicleEntry.set(true)
+
           return of(null);
         })
       ).subscribe({
@@ -10887,8 +10899,15 @@ export class VehicleComponent implements OnInit,OnDestroy{
     currObj[this.MAPPINGS()['sum_insured']] = '';
     currObj[this.MAPPINGS()['segment']] = '';
     currObj[this.MAPPINGS()['type']] = '';
+    currObj[this.MAPPINGS()['electric_vehicle']] = '';
+
     
     this.vehicleDetails.set(undefined);
+    this.selectedMakeCode.set(undefined)
+    this.selectedModelCode.set(undefined)
+
+    this.selectedVariant.set(undefined)
+
     this.sessionService.currentObject.set(currObj);
     this.cd.markForCheck();
     
@@ -10939,8 +10958,10 @@ export class VehicleComponent implements OnInit,OnDestroy{
      if (this.isSettingValuesProgram()) {
        return;
      }
+     this.manualVehicleEntry.set(false)
      
      const year = this.sessionService.currentObject()[this.MAPPINGS()['year']];
+
      if (!year) {
        this.clearCascadingDropdowns('year');
        return;
@@ -10959,15 +10980,15 @@ export class VehicleComponent implements OnInit,OnDestroy{
        catchError((error: HttpErrorResponse) => {
          this.isLoadingMakes.set(false);
          this.error.set(GetServerMsgFromHttpError(error));
-         this.manualSearchVehicleFound.set(true)
+         this.manualVehicleEntry.set(true)
          return of([]);
        })
      ).subscribe({
        next: (makes) => {
          this.isLoadingMakes.set(false);
          this.makeOptions.set(makes || []);
-         if(!this.makeOptions().length) this.manualSearchVehicleFound.set(true)
-          else this.manualSearchVehicleFound.set(false)
+         if(!this.makeOptions().length) this.manualVehicleEntry.set(true)
+          else this.manualVehicleEntry.set(false)
          this.cd.markForCheck();
        }
      });
@@ -10991,13 +11012,15 @@ export class VehicleComponent implements OnInit,OnDestroy{
      this.selectedMakeCode.set(selectedMakeOption.code);
      
      // Clear the selection and hide the dropdown
-     this.selectedMake.set(undefined);
      this.makeOptions.set([]);
      
      // Trigger the next API call for models
      const year = currObj[this.MAPPINGS()['year']];
+
      if (year) {
        this.loadModels(year, selectedMakeOption.code);
+     } else{
+        this.manualVehicleEntry.set(true)
      }
      
      this.syncFormData();
@@ -11018,15 +11041,18 @@ export class VehicleComponent implements OnInit,OnDestroy{
        catchError((error: HttpErrorResponse) => {
          this.isLoadingModels.set(false);
          this.error.set(GetServerMsgFromHttpError(error));
-         this.manualSearchVehicleFound.set(true)
+         this.manualVehicleEntry.set(true)
+         this.cd.markForCheck();
+
          return of([]);
+
        })
      ).subscribe({
        next: (models) => {
          this.isLoadingModels.set(false);
          this.modelOptions.set(models || []);
-         if(!this.modelOptions().length) this.manualSearchVehicleFound.set(true)
-          else this.manualSearchVehicleFound.set(false)
+         if(!this.modelOptions().length) this.manualVehicleEntry.set(true)
+          else this.manualVehicleEntry.set(false)
 
         this.cd.markForCheck();
 
@@ -11034,9 +11060,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
      });
    }
 
-   onMakeChange() {
-     // This method is no longer needed for direct binding
-   }
+
 
    onModelSelect() {
      const model = this.selectedModel();
@@ -11055,7 +11079,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
      this.selectedModelCode.set(selectedModelOption.code);
      
      // Clear the selection and hide the dropdown
-     this.selectedModel.set(undefined);
      this.modelOptions.set([]);
      
      // Trigger the next API call for variants
@@ -11063,6 +11086,8 @@ export class VehicleComponent implements OnInit,OnDestroy{
      const makeCode = this.selectedMakeCode();
      if (year && makeCode) {
        this.loadVariants(year, makeCode, selectedModelOption.code);
+     } else{
+        this.manualVehicleEntry.set(true)
      }
      
      this.syncFormData();
@@ -11084,7 +11109,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
        catchError((error: HttpErrorResponse) => {
          this.isLoadingVariants.set(false);
          this.error.set(GetServerMsgFromHttpError(error));
-         this.manualSearchVehicleFound.set(true)
+         this.manualVehicleEntry.set(true)
 
          return of([]);
        })
@@ -11092,8 +11117,8 @@ export class VehicleComponent implements OnInit,OnDestroy{
        next: (variants) => {
          this.isLoadingVariants.set(false);
          this.variantOptions.set(variants || []);
-         if(!this.variantOptions().length) this.manualSearchVehicleFound.set(true)
-          else this.manualSearchVehicleFound.set(false)
+         if(!this.variantOptions().length) this.manualVehicleEntry.set(true)
+          else this.manualVehicleEntry.set(false)
 
 
          this.cd.markForCheck();
@@ -11101,9 +11126,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
      });
    }
 
-   onModelChange() {
-     // This method is no longer needed for direct binding
-   }
 
    onVariantSelect() {
      const variant = this.selectedVariant();
@@ -11115,7 +11137,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
      this.sessionService.currentObject.set(currObj);
      
      // Clear the selection and hide the dropdown
-     this.selectedVariant.set(undefined);
      this.variantOptions.set([]);
      
      // Trigger the next API call for NVIC options
@@ -11124,6 +11145,8 @@ export class VehicleComponent implements OnInit,OnDestroy{
      const modelCode = this.selectedModelCode();
      if (year && makeCode && modelCode) {
        this.loadNvicOptions(year, makeCode, modelCode);
+     } else{
+        this.manualVehicleEntry.set(true)
      }
      
      this.syncFormData();
@@ -11145,7 +11168,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
        catchError((error: HttpErrorResponse) => {
          this.isLoadingNvicOptions.set(false);
          this.error.set(GetServerMsgFromHttpError(error));
-         this.manualSearchVehicleFound.set(true)
+         this.manualVehicleEntry.set(true)
 
          return of([]);
        })
@@ -11153,8 +11176,8 @@ export class VehicleComponent implements OnInit,OnDestroy{
        next: (nvicList) => {
          this.isLoadingNvicOptions.set(false);
          this.nvicOptions.set(nvicList || []);
-         if(!this.nvicOptions().length) this.manualSearchVehicleFound.set(true)
-          else this.manualSearchVehicleFound.set(false)
+         if(!this.nvicOptions().length) this.manualVehicleEntry.set(true)
+          else this.manualVehicleEntry.set(false)
 
 
          this.cd.markForCheck();
@@ -11163,9 +11186,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
      });
    }
 
-   onVariantChange() {
-     // This method is no longer needed for direct binding
-   }
+
 
    onNvicSelect() {
      const selectedNvic = this.selectedNvic();
@@ -11183,7 +11204,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
        catchError((error: HttpErrorResponse) => {
          this.isLookingUpVehicle.set(false);
          this.error.set(GetServerMsgFromHttpError(error));
-         this.manualSearchVehicleFound.set(true)
+         this.manualVehicleEntry.set(true)
          return of(null);
        })
      ).subscribe({
@@ -11192,7 +11213,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
          if (details && details.length > 0) {
            this.mapVehicleDetailsToForm(details[0]);
          }
-         this.manualSearchVehicleFound.set(true)
+         this.manualVehicleEntry.set(true)
           
          this.cd.markForCheck()
        }
@@ -11211,7 +11232,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
         options.set([])
         return
       }
-      this.selectedNvic.set(undefined);
       this.nvicOptions.set([]);
      }
 
@@ -11221,13 +11241,10 @@ export class VehicleComponent implements OnInit,OnDestroy{
        clearFields('model',this.modelOptions)
        clearFields('variant',this.variantOptions)
        clearFields('nvic')
-       this.selectedMakeCode.set(undefined);
-       this.selectedModelCode.set(undefined);
      } else if (fromLevel === 'make') {
         clearFields('model',this.modelOptions)
         clearFields('variant',this.variantOptions)
         clearFields('nvic')
-        this.selectedModelCode.set(undefined);
      } else if (fromLevel === 'model') {
         clearFields('variant',this.variantOptions)
         clearFields('nvic')

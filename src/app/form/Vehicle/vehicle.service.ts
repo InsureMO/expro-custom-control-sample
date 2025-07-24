@@ -25,31 +25,6 @@ export class VehicleService implements AppService{
 
     }
 
-    // searchPlacesByText(req:SearchPalcesRequest): Observable<SearchPlacesResult>{
-    //     let headers = new HttpHeaders()
-    //     headers = headers.append("Authorization",
-    //         this.sessionService.customAppContext()?.insuremo.access_token ?? '')
-            
-    //     let params = new HttpParams()
-    //     params = params.append("input", req.input)
-            
-    //     let url = this.sessionService.customAppContext()?.places.api_search_places ?? ''
-    //     return this.http.get<SearchPlacesResult>(url,{headers, params})
-    // }
-
-
-    // searchPlaceDetailByPlaceID(place_id:string): Observable<SearchPlacesDetailsResult>{
-    //     let headers = new HttpHeaders()
-    //     headers = headers.append("Authorization",
-    //         this.sessionService.customAppContext()?.insuremo.access_token ?? '')
-            
-    //     let params = new HttpParams()
-    //     params = params.append("placeid", place_id)
-            
-    //     let url = this.sessionService.customAppContext()?.places.api_search_place_details ?? ''
-    //     return this.http.get<SearchPlacesDetailsResult>(url,{headers, params})
-    // }
-
     vehicleLookupByPlate(req: VehicleLookupByPlateRequest): Observable<VehicleLookupByPlateResponse> {
         let headers = new HttpHeaders()
         headers = headers.append("Authorization", 
