@@ -115,6 +115,50 @@ export class VehicleComponent implements OnInit,OnDestroy{
     { label: 'Passenger & light commercial vehicles up to 3.5 tonnes', value: 'PassengerLightCommercialVehicles' }
   ];
 
+  vehicleCategoryOptions = [
+    {
+        "label": "EARTHMOVING EXCAVATORS",
+        "value": "EARTHMOVINGEXCAVATORS"
+    },
+    {
+        "label": "LOADERS",
+        "value": "LOADERS"
+    },
+    {
+        "label": "TRACTORS",
+        "value": "TRACTORS"
+    },
+    {
+        "label": "FORKLIFTS",
+        "value": "FORKLIFTS"
+    },
+    {
+        "label": "BOBCATS",
+        "value": "BOBCATS"
+    },
+    {
+        "label": "TRAILERS",
+        "value": "TRAILERS"
+    },
+    {
+        "label": "PRIME MOVER",
+        "value": "PRIMEMOVER"
+    },
+    {
+        "label": "RIGID TRUCKS_> 10T",
+        "value": "RIGIDTRUCKS10T"
+    },
+    {
+        "label": "RIGID TRUCKS_5T TO 10T",
+        "value": "RIGIDTRUCKS5TTO10T"
+    },
+    {
+        "label": "RIGID TRUCKS_3.5T TO 5T",
+        "value": "RIGIDTRUCKS35TTO5T"
+    }
+];
+
+
   YESNOOptions = [
     { label: 'Yes', value: 'YES' },
     { label: 'No', value: 'NO' },

@@ -49,7 +49,8 @@ export const FORM_MAP : Record<SupportedFieldGroup,Record<string,string>> = {
         segment: "VehicleSegment",
         variant: "VehicleVariant",
         sum_insured: "VehicleMarketValueSumInsured",
-        electric_vehicle: "ElectricVehicleFlag"
+        electric_vehicle: "ElectricVehicleFlag",
+        vehicle_category: "VehicleCategory"
     }
     
 

@@ -18,6 +18,24 @@
                         optionValue="value">
                     </p-select>
                 </div>
+
+                @if(['MobilePlantEquipment','HeavyVehicles35Tonnes'].includes(sessionService.currentObject()[MAPPINGS()['type']])){
+                    <div class="d-flex flex-column gap-2 w-100">
+                        <label for="vehicleType">Vehicle Category</label>
+                        <p-select
+                            [disabled]="!sessionService.canEditForm()"
+                            class="w-100"
+                            id="vehicleType"
+                            [options]="vehicleCategoryOptions"
+                            [(ngModel)]="sessionService.currentObject()[MAPPINGS()['vehicle_category']]"
+                            (ngModelChange)="syncFormData()"
+                            placeholder="Select Vehicle Category"
+                            optionLabel="label"
+                            optionValue="value">
+                        </p-select>
+                    </div>
+                }
+                
             </div>
 
             <div class="d-flex flex-row gap-4">
