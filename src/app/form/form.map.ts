@@ -40,7 +40,7 @@ export const FORM_MAP : Record<SupportedFieldGroup,Record<string,string>> = {
         is_new_not_registered: "NewVehicleNotYetRegistered",
         rego: "Rego",
         state: "WhichStateIsTheVehicleUsuallyLocated",
-        postcode: "WhichPostcodeIsTheVehicleUsuallyLocated",
+        post_code: "WhichPostcodeIsTheVehicleUsuallyLocated",
         model: "Model",
         make: "VehicleMake",
         year: "VehicleYearManufactured",
