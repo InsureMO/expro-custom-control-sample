@@ -10884,7 +10884,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
     currObj[this.MAPPINGS()['engine_size']] = '';
     currObj[this.MAPPINGS()['sum_insured']] = '';
     currObj[this.MAPPINGS()['segment']] = '';
-    currObj[this.MAPPINGS()['type']] = '';
+    // currObj[this.MAPPINGS()['type']] = '';
     currObj[this.MAPPINGS()['electric_vehicle']] = '';
 
     
