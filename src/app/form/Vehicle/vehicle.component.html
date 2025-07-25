@@ -365,7 +365,7 @@
                     <ng-container *ngTemplateOutlet="fieldDisplay; context: { 
                         label: 'Market Value (Sum Insured)', 
                         fieldId: 'sumInsured',
-                        fieldType: 'text',
+                        fieldType: 'number',
                         mapping: 'sum_insured',
                         required: ['MobilePlantEquipment','HeavyVehicles35Tonnes'].includes(sessionService.currentObject()[MAPPINGS()['type']])
                     }"></ng-container>
@@ -418,6 +418,20 @@
                         [useGrouping]="false" 
                     > 
                     </p-inputNumber>
+            }
+            @case ('number') {
+
+                <p-inputNumber 
+                [id]="fieldId"
+                [inputId]="fieldId"
+                [showButtons]="true"
+                [disabled]="!sessionService.canEditForm()"
+                [(ngModel)]="sessionService.currentObject()[MAPPINGS()[mapping]]"
+                (ngModelChange)="syncFormData()"
+                placeholder="'Enter ' + label.toLowerCase()"
+                [useGrouping]="false" 
+            > 
+            </p-inputNumber>
             }
             @default {
                 <input
