@@ -10744,7 +10744,15 @@ export class VehicleComponent implements OnInit,OnDestroy{
 
   ngOnInit(): void {
     this.MAPPINGS.set(FORM_MAP[this.sessionService.currentObjectKey()])
+    if(this.hasVehicleDetails()){
+        this.manualVehicleEntry.set(true)
+        return
+    }
     this.prepareOptions()
+  }
+
+  hasVehicleDetails(){
+    return ['year','make','model'].some(f=>f!=='')
   }
 
   prepareOptions(){
