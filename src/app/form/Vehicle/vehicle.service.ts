@@ -3,7 +3,6 @@ import { AppService } from "../../types/service";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { SessionService } from "../../services/session.service";
-import { VehicleComponent } from "./vehicle.component";
 
 import { 
     VehicleLookupByPlateRequest, VehicleLookupByPlateResponse, 
@@ -13,6 +12,7 @@ import {
     VehicleVariantLookupRequest, VehicleVariantLookupResponse,
     VehicleNvicListLookupRequest, VehicleNvicListLookupResponse
 } from "./model";
+import { VehicleComponent } from "./vehicle.component";
 
 @Injectable({providedIn:VehicleComponent})
 export class VehicleService implements AppService{

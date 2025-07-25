@@ -13,7 +13,7 @@ import { AppLoadError } from './types/app';
 import { CustomAppContext, DefaultAppContext } from './types/input';
 import { AddressComponent } from './form/address/address.component';
 import { AbnComponent } from './form/abn/abn.component';
-import { VehicleComponent } from "./form/Vehicle/vehicle.component";
+import { VehicleComponent } from "./form/vehicle/vehicle.component";
 
 @Component({
   selector: 'expro-custom-control',

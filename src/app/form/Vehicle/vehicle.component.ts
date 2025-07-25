@@ -13,21 +13,15 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { GetShadowRootElementByID } from '../../shared/utils/dom';
-import { VehicleService } from './vehicle.service';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
 
 
-import { 
-  VehicleLookupByPlateRequest, VehicleLookupByPlateResponse, 
-  VehicleDetailsLookupByNVICRequest, VehicleDetailsLookupByNVICResponse, 
-  VehicleDetail, DropdownOptions, DropdownOptionsWithNames,
-  VehicleMakeLookupRequest, VehicleModelLookupRequest,
-  VehicleVariantLookupRequest, VehicleNvicListLookupRequest,
-  VehicleNvicOption
-} from './model';
+
 import { NgTemplateOutlet } from '@angular/common';
+import { VehicleService } from './vehicle.service';
+import { DropdownOptions, DropdownOptionsWithNames, VehicleDetail, VehicleDetailsLookupByNVICRequest, VehicleDetailsLookupByNVICResponse, VehicleLookupByPlateRequest, VehicleLookupByPlateResponse, VehicleMakeLookupRequest, VehicleModelLookupRequest, VehicleNvicListLookupRequest, VehicleNvicOption, VehicleVariantLookupRequest } from './model';
 type SearchType = 'name' | 'number'
 type DebouncedSearch = {
   query: string
@@ -10862,7 +10856,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
     this.isSettingValuesProgram.set(true)
     
     currObj[this.MAPPINGS()['make']] = vehicleDetail.ManufacturerName;
-    currObj[this.MAPPINGS()['model']] = vehicleDetail.ModelName;
+    currObj[this.MAPPINGS()['model']] = vehicleDetail.FamilyName;
     currObj[this.MAPPINGS()['variant']] = vehicleDetail.VariantName;
     currObj[this.MAPPINGS()['year']] = parseInt(vehicleDetail.YearCreate) || 0;
     currObj[this.MAPPINGS()['engine_size']] = vehicleDetail.CCName;
