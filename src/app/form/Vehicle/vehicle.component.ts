@@ -97,7 +97,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
   
   // UI state management
 
-  QUERY_BOX_ID = 'query-box'
 
   stateOptions = [
     { label: 'WA', value: 'WA' },
@@ -10763,7 +10762,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
   prepareVehicleLookupDebounce() {
     this.vehicleLookupSubject.pipe(
       debounceTime(500),
-      distinctUntilChanged((prev, curr) => prev.plate === curr.plate && prev.state === curr.state),
       switchMap((lookupData: VehicleLookupSearch) => {
         if (!lookupData.plate || !lookupData.state) {
           return of(null);
@@ -10809,10 +10807,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
   ngOnDestroy() {
     this.searchSubject.unsubscribe();
     this.vehicleLookupSubject.unsubscribe();
-  }
-
-  autoFocusQuery(){
-    setTimeout(()=>GetShadowRootElementByID(this.QUERY_BOX_ID)?.focus(),300)
   }
 
 
@@ -10878,17 +10872,15 @@ export class VehicleComponent implements OnInit,OnDestroy{
     this.syncFormData();
   }
 
-  clearVehicleFields() {
+  clearVehicleFields(notYear = false) {
     let currObj = this.sessionService.currentObject();
-    
-    // Set flag to prevent cascading API calls when clearing fields
-    this.isSettingValuesProgram.set(true)
+
 
     
     currObj[this.MAPPINGS()['make']] = '';
     currObj[this.MAPPINGS()['model']] = '';
     currObj[this.MAPPINGS()['variant']] = '';
-    currObj[this.MAPPINGS()['year']] = null;
+    if(!notYear) currObj[this.MAPPINGS()['year']] = null;
     currObj[this.MAPPINGS()['engine_size']] = '';
     currObj[this.MAPPINGS()['sum_insured']] = '';
     currObj[this.MAPPINGS()['segment']] = '';
@@ -10935,16 +10927,18 @@ export class VehicleComponent implements OnInit,OnDestroy{
       this.coreService.emiParentAppData(eventData)
       
       const isNewVehicle = this.sessionService.currentObject()[this.MAPPINGS()['is_new_not_registered']];
-      if (isNewVehicle) {
-        this.noVehicleFound.set(false);
-        const year = this.sessionService.currentObject()[this.MAPPINGS()['year']];
-        if (year) {
-          this.onYearChange();
-        }
-      } else {
-        // If switching from new to registered, clear manual entry states
+      if(!this.manualVehicleEntry()){
+        if (isNewVehicle) {
+            this.noVehicleFound.set(false);
+            const year = this.sessionService.currentObject()[this.MAPPINGS()['year']];
+            if (year) {
+              this.onYearChange();
+            }
+            return
+          } 
         this.clearCascadingDropdowns('year');
       }
+      
    }
 
    onYearChange() {
@@ -10952,7 +10946,6 @@ export class VehicleComponent implements OnInit,OnDestroy{
      if (this.isSettingValuesProgram()) {
        return;
      }
-     this.manualVehicleEntry.set(false)
      
      const year = this.sessionService.currentObject()[this.MAPPINGS()['year']];
 
@@ -10960,6 +10953,8 @@ export class VehicleComponent implements OnInit,OnDestroy{
        this.clearCascadingDropdowns('year');
        return;
      }
+     this.clearVehicleFields(true)
+     this.manualVehicleEntry.set(false)
 
      this.isLoadingMakes.set(true);
      this.clearCascadingDropdowns('year');

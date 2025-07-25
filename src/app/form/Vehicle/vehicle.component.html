@@ -66,7 +66,7 @@
                         <p-checkbox 
                         id="newVehicle"
                         [(ngModel)]="sessionService.currentObject()[MAPPINGS()['is_new_not_registered']]"
-                        (ngModelChange)="clearVehicleFields();syncFormData();clearCascadingDropdowns('year'); sessionService.currentObject()[MAPPINGS()['rego']] = '';"
+                        (ngModelChange)=" sessionService.currentObject()[MAPPINGS()['rego']] = ''; clearVehicleFields();syncFormData();clearCascadingDropdowns('year');"
                         [disabled]="!sessionService.canEditForm()" 
                         binary="true"
                         />
