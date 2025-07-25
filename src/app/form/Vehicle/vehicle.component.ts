@@ -10906,7 +10906,7 @@ export class VehicleComponent implements OnInit,OnDestroy{
     currObj[this.MAPPINGS()['variant']] = vehicleDetail.VariantName;
     currObj[this.MAPPINGS()['year']] = parseInt(vehicleDetail.YearCreate) || 0;
     currObj[this.MAPPINGS()['engine_size']] = vehicleDetail.CCName;
-    currObj[this.MAPPINGS()['sum_insured']] = vehicleDetail.Trade;
+    currObj[this.MAPPINGS()['sum_insured']] = parseInt(vehicleDetail.Trade) || 0;
     currObj[this.MAPPINGS()['segment']] = vehicleDetail.SegmentName;
     
     this.vehicleDetails.set(vehicleDetail);
